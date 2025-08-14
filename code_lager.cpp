@@ -180,3 +180,46 @@ int main() {
 }
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    int fd = open("/dev/hidraw9", O_RDWR);  // adjust device number
+    if (fd < 0) {
+        perror("not open");
+        return 1;
+    }
+    
+    // Create 81-byte report (same as reference code)
+    unsigned char buf1[81] = {0};
+    buf1[0] = 0x80;           // Report ID
+	buf1[25] = 0;
+	buf1[26] = 0;
+	buf1[27] = 127;
+    buf1[71] = 127;
+
+
+    // Write the full report
+    ssize_t written1 = write(fd, buf1, sizeof(buf1));
+    if (written1 != sizeof(buf1)) {
+        perror("write");
+        printf("Only wrote %zd bytes out of %zu\n", written1, sizeof(buf1));
+    } else {
+        printf("Successfully wrote buf1 %zd bytes\n", written1);
+    }
+    
+//	usleep(2000);  // Small delay
+
+    close(fd);
+*/

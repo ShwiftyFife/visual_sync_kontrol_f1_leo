@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build main",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "main.cpp",
+                "-o",
+                "main",
+                "-lhidapi-hidraw"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compile C++ and link HIDAPI"
+        }
+    ]
+}
+

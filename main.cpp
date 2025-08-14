@@ -10,8 +10,7 @@
 // build with control+shift+b (builds with cmake, declared in tasks.json)
 // run in terminal with ./main
 
-// F1 uses 22 bytes for HID reading reports
-// F1 uses 81 bytes for HID writing reports
+
 
 /*
 To find hidraw device in bash terminal run:
@@ -21,50 +20,90 @@ To find hidraw device in bash terminal run:
 3.: Look for: idVendor and idProduct
 */ 
 
+
+void toggleLED(hid_device *handle) {
+    // Green LED positions for the 4x4 matrix (reading left to right, top to bottom)
+    int green_positions[16] = {
+        27, // (1,1) green
+        30, // (2,1) green  
+        33, // (3,1) green
+        36, // (4,1) green
+        39, // (1,2) green
+        42, // (2,2) green
+        45, // (3,2) green
+        48, // (4,2) green
+        51, // (1,3) green
+        54, // (2,3) green
+        57, // (3,3) green
+        60, // (4,3) green
+        63, // (1,4) green
+        66, // (2,4) green
+        69, // (3,4) green
+        72  // (4,4) green
+    };
+
+    unsigned char buf[81] = {0};
+    int buf_len = sizeof(buf) / sizeof(buf[0]);
+    buf[0] = 0x80; // Set report ID
+    
+    // Turn on each green LED sequentially
+    for (int i = 0; i < 16; i++) {
+        // Clear previous LED (turn off all LEDs)
+        memset(&buf[1], 0, 80); // Clear bytes 1-80, keep report ID
+        
+        // Turn on current green LED
+        buf[green_positions[i]] = 127; // Full brightness
+        
+        // Send the command
+        int res = hid_write(handle, buf, buf_len);
+        if (res < 0) {
+            printf("Error writing to device: %ls\n", hid_error(handle));
+            return;
+        }
+        
+        // Wait before moving to next LED
+        usleep(500000); // Convert ms to microseconds
+    }
+    
+    // Optional: Turn off all LEDs at the end
+    memset(&buf[1], 0, 80);
+    hid_write(handle, buf, buf_len);
+}
+
+
 int main() {
-    int fd = open("/dev/hidraw9", O_RDWR);  // adjust device number
-    if (fd < 0) {
-        perror("not open");
-        return 1;
-    }
-    
-    // Create 81-byte report (same as reference code)
-    unsigned char buf1[81] = {0};
-    buf1[0] = 0x80;           // Report ID
-	buf1[25] = 0;
-	buf1[26] = 0;
-	buf1[27] = 127;
-    buf1[71] = 127;
 
+    // create start up message
+	printf("Starting Visual Sync Kontrol F1 hello Leo\n");
+	
+	// Initialize HIDAPI return code, send error message if initialization fails
+	int res = hid_init();
 
-    // Write the full report
-    ssize_t written1 = write(fd, buf1, sizeof(buf1));
-    if (written1 != sizeof(buf1)) {
-        perror("write");
-        printf("Only wrote %zd bytes out of %zu\n", written1, sizeof(buf1));
-    } else {
-        printf("Successfully wrote buf1 %zd bytes\n", written1);
-    }
-    
-	usleep(2000);  // Small delay
+	if (res != 0) {
+		fprintf(stderr, "Failed to initialize HIDAPI\n");
+		return 1;
+	} else {
+		printf("HID_API initialized successfully!\n");
+	}
 
-/*
+    hid_device *handle; // HID device handle
+    // Open the device using the VendorID, ProductID, and optionally the Serial number.
+	handle = hid_open(0x17cc, 0x1120, NULL);
+	if (handle) {
+		toggleLED(handle);
+		printf("Traktor Kontrol F1 opened successfully!\n");
+		// Proceed with other operations
+	} else {
+		printf("Unable to open device\n");
+		hid_exit();
+ 		return 0;
+	}
 
+    // Close the device
+	hid_close(handle);
 
-	// Second packet with remaining data  
-	unsigned char buf2[10] = {0};  // 18 data bytes + 1 report ID
-	buf2[0] = 0x81;  // Same report ID?
-	// buf2[1] corresponds to original byte 63
-	// buf2[2] corresponds to original byte 64, etc.
-	ssize_t written2 = write(fd, buf2, sizeof(buf2));
+	// Finalize the hidapi library
+	res = hid_exit();
 
-	if (written2 != sizeof(buf2)) {
-        perror("write");
-        printf("Only wrote %zd bytes out of %zu\n", written2, sizeof(buf2));
-    } else {
-        printf("Successfully wrote buf2 %zd bytes\n", written2);
-    }
-*/
-    close(fd);
     return 0;
 }
