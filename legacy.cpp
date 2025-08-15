@@ -223,3 +223,148 @@ int main() {
 
     close(fd);
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+void LEDspectrum(hid_device *handle) {
+    float brightness_mod = 0.05;
+    unsigned char buf[81] = {0};
+    int buf_len = sizeof(buf) / sizeof(buf[0]);
+    buf[0] = 0x80; // Set report ID
+    buf[21] = 65; // Shift button
+    buf[25] = 255*brightness_mod;
+    buf[26] = 0;
+    buf[27] = 0;
+    buf[28] = 255*brightness_mod;
+    buf[29] = 97*brightness_mod;
+    buf[30] = 45*brightness_mod;
+    buf[31] = 255*brightness_mod;
+    buf[32] = 148*brightness_mod;
+    buf[33] = 0;
+    buf[34] = 255*brightness_mod;
+    buf[35] = 213*brightness_mod;
+    buf[36] = 0;
+    buf[37] = 255*brightness_mod;
+    buf[38] = 255*brightness_mod;
+    buf[39] = 0;
+    buf[40] = 144*brightness_mod;
+    buf[41] = 255*brightness_mod;
+    buf[42] = 0;
+    buf[43] = 0;
+    buf[44] = 255*brightness_mod;
+    buf[45] = 0;
+    buf[46] = 0;
+    buf[47] = 255*brightness_mod;
+    buf[48] = 165*brightness_mod;
+    buf[49] = 0;
+    buf[50] = 255*brightness_mod;
+    buf[51] = 255*brightness_mod;
+    buf[52] = 0;
+    buf[53] = 206*brightness_mod;
+    buf[54] = 255*brightness_mod;
+    buf[55] = 0;
+    buf[56] = 49*brightness_mod;
+    buf[57] = 255*brightness_mod;
+    buf[58] = 69*brightness_mod;
+    buf[59] = 49*brightness_mod;
+    buf[60] = 218*brightness_mod;
+    buf[61] = 125*brightness_mod;
+    buf[62] = 41*brightness_mod;
+    buf[63] = 217*brightness_mod;
+    buf[64] = 229*brightness_mod;
+    buf[65] = 18*brightness_mod;
+    buf[66] = 255*brightness_mod;
+    buf[67] = 255*brightness_mod;
+    buf[68] = 0;
+    buf[69] = 255*brightness_mod;
+    buf[70] = 255*brightness_mod;
+    buf[71] = 0;
+    buf[72] = 136*brightness_mod;
+    
+    int res = hid_write(handle, buf, buf_len);
+    if (res < 0) {
+        printf("Error writing to device: %ls\n", hid_error(handle));
+    }
+}
+
+
+        usleep(50000); // Convert ms to microseconds
+        LEDspectrum(handle);
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+/*
+
+void toggleLED(hid_device *handle) {
+    // Green LED positions for the 4x4 matrix (reading left to right, top to bottom)
+    int green_positions[16] = {
+        27, // (1,1) green
+        30, // (2,1) green  
+        33, // (3,1) green
+        36, // (4,1) green
+        39, // (1,2) green
+        42, // (2,2) green
+        45, // (3,2) green
+        48, // (4,2) green
+        51, // (1,3) green
+        54, // (2,3) green
+        57, // (3,3) green
+        60, // (4,3) green
+        63, // (1,4) green
+        66, // (2,4) green
+        69, // (3,4) green
+        72  // (4,4) green
+    };
+
+    unsigned char buf[81] = {0};
+    int buf_len = sizeof(buf) / sizeof(buf[0]);
+    buf[0] = 0x80; // Set report ID
+    
+    // Turn on each green LED sequentially
+    for (int i = 0; i < 16; i++) {
+        // Clear previous LED (turn off all LEDs)
+        memset(&buf[1], 0, 80); // Clear bytes 1-80, keep report ID
+        
+        // Turn on current green LED
+        buf[green_positions[i]] = 127; // Full brightness
+        
+        // Send the command
+        int res = hid_write(handle, buf, buf_len);
+        if (res < 0) {
+            printf("Error writing to device: %ls\n", hid_error(handle));
+            return;
+        }
+        
+        // Wait before moving to next LED
+        usleep(100000); // Convert ms to microseconds
+    }
+    
+    // Optional: Turn off all LEDs at the end
+    memset(&buf[1], 0, 80);
+    hid_write(handle, buf, buf_len);
+}
+
+*/

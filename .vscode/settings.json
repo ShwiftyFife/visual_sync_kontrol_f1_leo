@@ -1,14 +1,42 @@
 {
     "cmake.generator": "Unix Makefiles",
-    "cmake.cxxCompiler": "/usr/bin/g++",
-    "cmake.sourceDirectory": "/home/leo/Desktop/visual_sync_kontrol_f1_leo",
-    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    //"cmake.cxxCompiler": "/opt/homebrew/bin/g++",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.configureOnOpen": false,
+
+    // C++ IntelliSense Configuration
+    "C_Cpp.default.compilerPath": "/opt/homebrew/bin/g++",
     "C_Cpp.default.cppStandard": "c++20",
-    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.intelliSenseMode": "macos-gcc-x64",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "/opt/homebrew/include/**",
+        "/opt/homebrew/Cellar/hidapi/0.15.0/include/**"
+    ],
+    "C_Cpp.default.compilerArgs": [
+        "-Wall",
+        "-Wextra",
+        "-I/opt/homebrew/include",
+        "-I/opt/homebrew/Cellar/hidapi/0.15.0/include"
+    ],
+    "C_Cpp.default.defines": [],
+
+    // Code Runner Configuration (backup compilation method)
     "code-runner.executorMap": {
-        "cpp": "cd $dir && g++ -std=c++20 -Wall -Wextra -g3 $fileName -o $fileNameWithoutExt -lhidapi-libusb && ./$fileNameWithoutExt"
+        "cpp": "cd $dir && g++ -std=c++20 -Wall -Wextra -I/opt/homebrew/include -I. main.cpp startup_effect.cpp -o traktor -L/opt/homebrew/lib -lhidapi && ./traktor"
+        //"cpp": "cd $dir && g++ -std=c++20 -Wall -Wextra -g3 -I/opt/homebrew/include -I/opt/homebrew/Cellar/hidapi/0.15.0/include $fileName -o $fileNameWithoutExt -L/opt/homebrew/lib -L/opt/homebrew/Cellar/hidapi/0.15.0/lib -lhidapi && ./$fileNameWithoutExt"
     },
+
+    // File associations
     "files.associations": {
-        "iostream": "cpp"
-    }
+        "iostream": "cpp",
+        "hidapi": "cpp",
+        "cstring": "cpp",
+        "unistd": "cpp"
+    },
+
+    // CMake specific settings
+    "cmake.buildBeforeRun": true,
+    "cmake.clearOutputBeforeRun": true
 }

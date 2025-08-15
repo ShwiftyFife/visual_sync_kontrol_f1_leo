@@ -5,25 +5,61 @@ project(traktor CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find HIDAPI
-find_path(HIDAPI_INCLUDE_DIR hidapi/hidapi.h)
-find_library(HIDAPI_LIBRARY NAMES hidapi-libusb hidapi)
+# Add some compiler flags for better debugging and warnings
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
-if(NOT HIDAPI_INCLUDE_DIR OR NOT HIDAPI_LIBRARY)
-    message(FATAL_ERROR "hidapi not found. Install libhidapi-dev.")
+
+# Find HIDAPI - more robust approach for macOS
+if(APPLE)
+    # Try to find via Homebrew paths
+    find_path(HIDAPI_INCLUDE_DIR 
+        NAMES hidapi/hidapi.h
+        PATHS 
+            /opt/homebrew/include
+            /usr/local/include
+        NO_DEFAULT_PATH
+    )
+    
+    find_library(HIDAPI_LIBRARY 
+        NAMES hidapi
+        PATHS 
+            /opt/homebrew/lib
+            /usr/local/lib
+        NO_DEFAULT_PATH
+    )
+else()
+    # Linux approach
+    find_path(HIDAPI_INCLUDE_DIR hidapi/hidapi.h)
+    find_library(HIDAPI_LIBRARY NAMES hidapi-libusb hidapi)
 endif()
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(HIDAPI
-    DEFAULT_MSG
-    HIDAPI_LIBRARY
-    HIDAPI_INCLUDE_DIR)
+# Check if we found everything
+if(NOT HIDAPI_INCLUDE_DIR OR NOT HIDAPI_LIBRARY)
+    message(FATAL_ERROR "HIDAPI not found. On macOS: brew install hidapi")
+endif()
+
+# Print what we found (helpful for debugging)
+message(STATUS "HIDAPI include dir: ${HIDAPI_INCLUDE_DIR}")
+message(STATUS "HIDAPI library: ${HIDAPI_LIBRARY}")
+
+
+#include(FindPackageHandleStandardArgs)
+#find_package_handle_standard_args(HIDAPI
+#    DEFAULT_MSG
+#    HIDAPI_LIBRARY
+#    HIDAPI_INCLUDE_DIR)
 
 # Add executable
-add_executable(traktor main.cpp)
+add_executable(traktor 
+    main.cpp
+    functions/startup_effect.cpp
+)
 
-# Include path for compiler
-target_include_directories(traktor PRIVATE ${HIDAPI_INCLUDE_DIR})
+# Include directories
+target_include_directories(traktor PRIVATE 
+    ${HIDAPI_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}  # This allows #include "headers/startup_effect.h" to work
+)
 
 # Link the HIDAPI library
 target_link_libraries(traktor PRIVATE ${HIDAPI_LIBRARY})
