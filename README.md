@@ -91,7 +91,7 @@ Ordered by the bytes as they are e.g. written into memory before performing a `w
   * 59 – (4, 3) red
   * 60 – (4, 3) green
   * 61 – (1, 4) blue
-  * 62 – (1, 4) red #### Byte length send until here
+  * 62 – (1, 4) red
   * 63 – (1, 4) green
   * 64 – (2, 4) blue
   * 65 – (2, 4) red

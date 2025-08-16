@@ -77,6 +77,8 @@ void toggleLED(hid_device *handle) {
 	
 	// THIS WORKS!
 
+    //wchar_t wstr[MAX_STR]; // Wide string buffer
+
 	// Read the Manufacturer String
 	res = hid_get_manufacturer_string(handle, wstr, MAX_STR);
 	printf("Manufacturer String: %ls\n", wstr);
@@ -238,81 +240,6 @@ int main() {
 
 
 
-/*
-void LEDspectrum(hid_device *handle) {
-    float brightness_mod = 0.05;
-    unsigned char buf[81] = {0};
-    int buf_len = sizeof(buf) / sizeof(buf[0]);
-    buf[0] = 0x80; // Set report ID
-    buf[21] = 65; // Shift button
-    buf[25] = 255*brightness_mod;
-    buf[26] = 0;
-    buf[27] = 0;
-    buf[28] = 255*brightness_mod;
-    buf[29] = 97*brightness_mod;
-    buf[30] = 45*brightness_mod;
-    buf[31] = 255*brightness_mod;
-    buf[32] = 148*brightness_mod;
-    buf[33] = 0;
-    buf[34] = 255*brightness_mod;
-    buf[35] = 213*brightness_mod;
-    buf[36] = 0;
-    buf[37] = 255*brightness_mod;
-    buf[38] = 255*brightness_mod;
-    buf[39] = 0;
-    buf[40] = 144*brightness_mod;
-    buf[41] = 255*brightness_mod;
-    buf[42] = 0;
-    buf[43] = 0;
-    buf[44] = 255*brightness_mod;
-    buf[45] = 0;
-    buf[46] = 0;
-    buf[47] = 255*brightness_mod;
-    buf[48] = 165*brightness_mod;
-    buf[49] = 0;
-    buf[50] = 255*brightness_mod;
-    buf[51] = 255*brightness_mod;
-    buf[52] = 0;
-    buf[53] = 206*brightness_mod;
-    buf[54] = 255*brightness_mod;
-    buf[55] = 0;
-    buf[56] = 49*brightness_mod;
-    buf[57] = 255*brightness_mod;
-    buf[58] = 69*brightness_mod;
-    buf[59] = 49*brightness_mod;
-    buf[60] = 218*brightness_mod;
-    buf[61] = 125*brightness_mod;
-    buf[62] = 41*brightness_mod;
-    buf[63] = 217*brightness_mod;
-    buf[64] = 229*brightness_mod;
-    buf[65] = 18*brightness_mod;
-    buf[66] = 255*brightness_mod;
-    buf[67] = 255*brightness_mod;
-    buf[68] = 0;
-    buf[69] = 255*brightness_mod;
-    buf[70] = 255*brightness_mod;
-    buf[71] = 0;
-    buf[72] = 136*brightness_mod;
-    
-    int res = hid_write(handle, buf, buf_len);
-    if (res < 0) {
-        printf("Error writing to device: %ls\n", hid_error(handle));
-    }
-}
-
-
-        usleep(50000); // Convert ms to microseconds
-        LEDspectrum(handle);
-
-
-
-*/
-
-
-
-
-
-
 
 
 
@@ -368,3 +295,5 @@ void toggleLED(hid_device *handle) {
 }
 
 */
+
+

@@ -12,48 +12,82 @@
 #include <fcntl.h>          // fcntl.h gives access to the POSIX file control API.
 #include <cstring>          // string.h gives access to C-style string functions.
 
-// Include our startup effects module
+// Include startup effects module
 #include "headers/startup_effect.h"
+// Include color system module
+#include "headers/color_system.h"
+// Include matrix LED module
+#include "headers/set_matrix_led.h"
 
 
 int main() {
 
+	// ________________________________________________________________
+	// START UP SEQUENCE
 
-    // ________________________________________________________________
-    // START UP SEQUENCE
-
-    // create start up message
+	// create start up message
 	printf("Starting Visual Sync Kontrol F1\n");
 	
 	// Initialize HIDAPI return code, send error message if initialization fails
 	int res = hid_init();
 	if (res != 0) {
-		fprintf(stderr, "Failed to initialize HIDAPI\n");
+		printf("- Failed to initialize HIDAPI\n");
 		return 1;
 	} else {
-		printf("HID_API initialized successfully!\n");
+		printf("- HID_API initialized successfully!\n");
 	}
 
-    // Open the device:
-    // Declare pointer to HID device handle
-    hid_device *handle; 
-    
-    // Open the device using the VendorID, ProductID, and optionally the Serial number.
+	// Open the device:
+	// Declare pointer to HID device handle
+	hid_device *handle; 
+	
+	// Open the device using the VendorID, ProductID, and optionally the Serial number.
 	handle = hid_open(0x17cc, 0x1120, NULL);
 	if (handle) {
+		printf("- Opening Traktor Kontrol F1...\n");
 		startupLEDSequence(handle);
-		printf("Traktor Kontrol F1 opened successfully!\n");
+		printf("- Traktor Kontrol F1 opened successfully!\n");
 	} else {
-		printf("Unable to open device...\nShutting down...\n");
+		printf("- Unable to open device...\nShutting down...\n");
 		hid_exit();
         return 0;
 	}
+	// ________________________________________________________________
+	// STUFFs HAPPENIN HERE
+	MatrixLEDController matrixController(handle);
 
-    // Close the device
+	matrixController.setMatrixButtonLED(MatrixButton::matrix11, ColorSystem::red, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix12, ColorSystem::red, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix13, ColorSystem::red, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix14, ColorSystem::red, 0.1f);
+
+	matrixController.setMatrixButtonLED(MatrixButton::matrix21, ColorSystem::yellow, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix22, ColorSystem::yellow, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix23, ColorSystem::yellow, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix24, ColorSystem::yellow, 0.1f);
+
+	matrixController.setMatrixButtonLED(MatrixButton::matrix31, ColorSystem::cyan, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix32, ColorSystem::cyan, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix33, ColorSystem::cyan, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix34, ColorSystem::cyan, 0.1f);
+
+	matrixController.setMatrixButtonLED(MatrixButton::matrix41, ColorSystem::violet, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix42, ColorSystem::violet, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix43, ColorSystem::violet, 0.1f);
+	matrixController.setMatrixButtonLED(MatrixButton::matrix44, ColorSystem::violet, 0.1f);
+	
+	// ________________________________________________________________
+	// CODE CLOSES
+  // Close the device
 	hid_close(handle);
 
 	// Finalize the hidapi library
 	res = hid_exit();
 
-    return 0;
+
+
+	// ________________________________________________________________
+	// TEST
+
+  return 0;
 }
