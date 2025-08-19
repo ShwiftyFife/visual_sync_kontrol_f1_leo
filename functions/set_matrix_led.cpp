@@ -16,20 +16,20 @@ ButtonMapping MatrixLEDController::getButtonMapping(MatrixButton button) {
     
     switch(button) {
         case MatrixButton::matrix11: mapping = {25, 26, 27}; break;
-        case MatrixButton::matrix21: mapping = {28, 29, 30}; break;
-        case MatrixButton::matrix31: mapping = {31, 32, 33}; break;
-        case MatrixButton::matrix41: mapping = {34, 35, 36}; break;
-        case MatrixButton::matrix12: mapping = {37, 38, 39}; break;
+        case MatrixButton::matrix12: mapping = {28, 29, 30}; break;
+        case MatrixButton::matrix13: mapping = {31, 32, 33}; break;
+        case MatrixButton::matrix14: mapping = {34, 35, 36}; break;
+        case MatrixButton::matrix21: mapping = {37, 38, 39}; break;
         case MatrixButton::matrix22: mapping = {40, 41, 42}; break;
-        case MatrixButton::matrix32: mapping = {43, 44, 45}; break;
-        case MatrixButton::matrix42: mapping = {46, 47, 48}; break;
-        case MatrixButton::matrix13: mapping = {49, 50, 51}; break;
-        case MatrixButton::matrix23: mapping = {52, 53, 54}; break;
+        case MatrixButton::matrix23: mapping = {43, 44, 45}; break;
+        case MatrixButton::matrix24: mapping = {46, 47, 48}; break;
+        case MatrixButton::matrix31: mapping = {49, 50, 51}; break;
+        case MatrixButton::matrix32: mapping = {52, 53, 54}; break;
         case MatrixButton::matrix33: mapping = {55, 56, 57}; break;
-        case MatrixButton::matrix43: mapping = {58, 59, 60}; break;
-        case MatrixButton::matrix14: mapping = {61, 62, 63}; break;
-        case MatrixButton::matrix24: mapping = {64, 65, 66}; break;
-        case MatrixButton::matrix34: mapping = {67, 68, 69}; break;
+        case MatrixButton::matrix34: mapping = {58, 59, 60}; break;
+        case MatrixButton::matrix41: mapping = {61, 62, 63}; break;
+        case MatrixButton::matrix42: mapping = {64, 65, 66}; break;
+        case MatrixButton::matrix43: mapping = {67, 68, 69}; break;
         case MatrixButton::matrix44: mapping = {70, 71, 72}; break;
     }
     

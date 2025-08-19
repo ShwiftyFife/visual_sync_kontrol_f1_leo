@@ -55,6 +55,7 @@ add_executable(traktor
     functions/startup_effect.cpp
     functions/color_system.cpp
     functions/set_matrix_led.cpp
+    functions/input_reader.cpp
 )
 
 # Include directories

@@ -21,6 +21,65 @@ To find hidraw device in bash terminal run:
 2. Replace # after hidraw with number of ls list: udevadm info -a -n /dev/hidraw# | grep idVendor -A2
 3. Look for: idVendor and idProduct
 
+## Input format
+
+Ordered by the bytes as they are e.g. written into memory upon performing a read() call on the hidraw device:
+
+* 0 – Report ID (= 0x01)
+* 1 – Button matrix (top half)
+  * Bit 7 – Button (1, 1)
+  * Bit 6 — Button (2, 1)
+  * Bit 5 – Button (3, 1)
+  * Bit 4 – Button (4, 1)
+  * Bit 3 – Button (1, 2)
+  * Bit 2 – Button (2, 2)
+  * Bit 1 – Button (3, 2)
+  * Bit 0 – Button (4, 2)
+* 2 – Button matrix (bottom half)
+  * Bit 7 – Button (1, 3)
+  * Bit 6 — Button (2, 3)
+  * Bit 5 – Button (3, 3)
+  * Bit 4 – Button (4, 3)
+  * Bit 3 – Button (1, 4)
+  * Bit 2 – Button (2, 4)
+  * Bit 1 – Button (3, 4)
+  * Bit 0 – Button (4, 4)
+* 3 – Special buttons (bottom half)
+  * Bit 7 – Shift
+  * Bit 6 – Reverse
+  * Bit 5 – Type
+  * Bit 4 – Size
+  * Bit 3 – Browse
+  * Bit 2 – Selector wheel button
+  * Bit 1 – don't care
+  * Bit 0 – don't care
+* 4 – Stop buttons, Special buttons (top half)
+  * Bit 7 – Stop 1
+  * Bit 6 – Stop 2
+  * Bit 5 – Stop 3
+  * Bit 4 – Stop 4
+  * Bit 3 – Sync
+  * Bit 2 – Quant
+  * Bit 1 – Capture
+  * Bit 0 – don't care
+* 5 – Selector wheel
+* 6 – Knob 1 LSB
+* 7 – Knob 1 MSB
+* 8 – Knob 2 LSB
+* 9 – Knob 2 MSB
+* 10 – Knob 3 LSB
+* 11 – Knob 3 MSB
+* 12 – Knob 4 LSB
+* 13 – Knob 4 MSB
+* 14 – Fader 1 LSB
+* 15 – Fader 1 MSB
+* 16 – Fader 2 LSB
+* 17 – Fader 2 MSB
+* 18 – Fader 3 LSB
+* 19 – Fader 3 MSB
+* 20 – Fader 4 LSB
+* 21 – Fader 4 MSB
+
 ## Output format
 
 Ordered by the bytes as they are e.g. written into memory before performing a `write()` call on the `hidraw` device or `hid_write()` on a `hid_open()` device.
@@ -57,48 +116,48 @@ Ordered by the bytes as they are e.g. written into memory before performing a `w
   * 25 – (1, 1) blue
   * 26 – (1, 1) red
   * 27 – (1, 1) green
-  * 28 – (2, 1) blue
-  * 29 – (2, 1) red
-  * 30 – (2, 1) green
-  * 31 – (3, 1) blue
-  * 32 – (3, 1) red
-  * 33 – (3, 1) green
-  * 34 – (4, 1) blue
-  * 35 – (4, 1) red
-  * 36 – (4, 1) green
-  * 37 – (1, 2) blue
-  * 38 – (1, 2) red
-  * 39 – (1, 2) green
+  * 28 – (1, 2) blue
+  * 29 – (1, 2) red
+  * 30 – (1, 2) green
+  * 31 – (1, 3) blue
+  * 32 – (1, 3) red
+  * 33 – (1, 3) green
+  * 34 – (1, 4) blue
+  * 35 – (1, 4) red
+  * 36 – (1, 4) green
+  * 37 – (2, 1) blue
+  * 38 – (2, 1) red
+  * 39 – (2, 1) green
   * 40 – (2, 2) blue
   * 41 – (2, 2) red
   * 42 – (2, 2) green
-  * 43 – (3, 2) blue
-  * 44 – (3, 2) red
-  * 45 – (3, 2) green
-  * 46 – (4, 2) blue
-  * 47 – (4, 2) red
-  * 48 – (4, 2) green
-  * 49 – (1, 3) blue
-  * 50 – (1, 3) red
-  * 51 – (1, 3) green
-  * 52 – (2, 3) blue
-  * 53 – (2, 3) red
-  * 54 – (2, 3) green
+  * 43 – (2, 3) blue
+  * 44 – (2, 3) red
+  * 45 – (2, 3) green
+  * 46 – (2, 4) blue
+  * 47 – (2, 4) red
+  * 48 – (2, 4) green
+  * 49 – (3, 1) blue
+  * 50 – (3, 1) red
+  * 51 – (3, 1) green
+  * 52 – (3, 2) blue
+  * 53 – (3, 2) red
+  * 54 – (3, 2) green
   * 55 – (3, 3) blue
   * 56 – (3, 3) red
   * 57 – (3, 3) green
-  * 58 – (4, 3) blue
-  * 59 – (4, 3) red
-  * 60 – (4, 3) green
-  * 61 – (1, 4) blue
-  * 62 – (1, 4) red
-  * 63 – (1, 4) green
-  * 64 – (2, 4) blue
-  * 65 – (2, 4) red
-  * 66 – (2, 4) green
-  * 67 – (3, 4) blue
-  * 68 – (3, 4) red
-  * 69 – (3, 4) green
+  * 58 – (3, 4) blue
+  * 59 – (3, 4) red
+  * 60 – (3, 4) green
+  * 61 – (4, 1) blue
+  * 62 – (4, 1) red
+  * 63 – (4, 1) green
+  * 64 – (4, 2) blue
+  * 65 – (4, 2) red
+  * 66 – (4, 2) green
+  * 67 – (4, 3) blue
+  * 68 – (4, 3) red
+  * 69 – (4, 3) green
   * 70 – (4, 4) blue
   * 71 – (4, 4) red
   * 72 – (4, 4) green
