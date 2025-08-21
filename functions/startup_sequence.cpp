@@ -1,21 +1,34 @@
-#include "headers/startup_effect.h"
+#include "headers/startup_sequence.h"
 
-#include <stdio.h>       // stdio.h gives printf() — basic text output (like print() in R).
+#include <iostream>      // iostream gives std::cout
 #include <unistd.h>      // unistd.h gives usleep() — sleep for microseconds
 #include <cstring>       // cstring gives memset() — memory manipulation
+// #include <hidapi/hidapi.h>   // included already in header
 
-// ________________________________________________________________
+
+// =============================================================================
 // START UP SEQUENCE
-void startupLEDSequence(hid_device *handle) {
+// =============================================================================
+
+/*
+* Run the startup sequence for the device
+* 
+* @param handle: The HID device handle
+*/
+
+void startupSequence(hid_device *handle) {
+  
+  // Step 1: Check if handle is valid
   if (!handle) {
-      printf("Error: Invalid device handle for startup sequence\n");
+      std::cout << "Error: Invalid device handle for startup sequence" << std::endl;
       return;
   }
 
   // Define sleep time
   const int sleep_time = 50000;
 
-  printf("  - Running startup LED sequence...\n");
+  // Run startup sequence message
+  std::cout << "  - Running startup LED sequence..." << std::endl;
 
   // ________________________________
   // Led sequence
@@ -191,5 +204,5 @@ void startupLEDSequence(hid_device *handle) {
   //buf[17] = 64; // Turn on browse LED
   hid_write(handle, buf, sizeof(buf));
 
-  printf("  - Startup LEDs completed!\n");
+  std::cout << "  - Startup Sequence completed!" << std::endl;
 }

@@ -52,10 +52,10 @@ message(STATUS "HIDAPI library: ${HIDAPI_LIBRARY}")
 # Add executable
 add_executable(traktor 
     main.cpp
-    functions/startup_effect.cpp
-    functions/color_system.cpp
-    functions/set_matrix_led.cpp
+    functions/startup_sequence.cpp
     functions/input_reader.cpp
+    functions/led_controller.cpp
+
 )
 
 # Include directories

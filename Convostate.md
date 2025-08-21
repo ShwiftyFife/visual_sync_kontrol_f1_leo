@@ -1,6 +1,6 @@
-# Project state
+I would like to start a new conversation on my project, as the last one reached its maximum length. Here ill provide you with a summary of the current state of the project, so that we are on the same page. Take your time to read through the summary. Aferwards, we can talk about the next steps. 
 
-I would like to start a new conversation on this project, as the last one reached its maximum length. Here ill provide you with a summary of the current state of the project, so that we are on the same page. Take your time to read through the summary. Aferwards, we can talk about the next steps. 
+# Project state
 
 ## Traktor Kontrol F1 Control Project - Updated Summary Goal
 
@@ -100,7 +100,11 @@ MASK_STOP1 = 0x80, MASK_STOP2 = 0x40, etc.
 
 ## Next Steps - Ready for Implementation
 
-### Immediate Goals (Should be achievable with current knowledge)
+### Immideate next step
+
+Completely rework color system and functions to set button Leds. I would like to new code to have the same structure as for the input_reader. Clear, well structured, with lots of comments. It might make sense to start from scratch and make new code. The functions should be again general. A library for the colors and functions to set each button LED. We'll work on the 7-segment number later. 
+
+### Goals (Should be achievable with current knowledge)
 
 1. Expand Special Buttons: Add REVERSE, TYPE, SIZE, SELECTOR_WHEEL to testing
 2. Implement Stop Button Detection: Create isStopButtonPressed() function
@@ -123,7 +127,7 @@ MASK_STOP1 = 0x80, MASK_STOP2 = 0x40, etc.
 * Safety-first coding with null pointer checks and error handling
 * Immediate testing with working programs to see results
 
-## Student Learning Progress:
+## Student Learning Progress
 
 * Understands pointers and buffer concepts
 * Grasps bitwise operations and bit masks
@@ -131,7 +135,7 @@ MASK_STOP1 = 0x80, MASK_STOP2 = 0x40, etc.
 * Successfully built and tested working HID input system
 * Ready for independent implementation of similar functions
 
-## Key Teaching Principles:
+## Key Teaching Principles
 
 1. Always explain why before how
 2. Use real data examples from the actual hardware

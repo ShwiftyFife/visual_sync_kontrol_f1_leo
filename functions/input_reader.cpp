@@ -53,13 +53,6 @@ bool readInputReport(hid_device *device, unsigned char *buffer) {
         return false;
     }
 
-    // For Debugging:
-    std::cout << "Input Report: ";
-    for (int i = 0; i < INPUT_REPORT_SIZE; ++i) {
-        std::cout << std::hex << (int)buffer[i] << " ";
-    }
-    std::cout << std::dec << std::endl;
-
     // Step 7: Success! There is a valid 22-byte input report
     return true;
 }
