@@ -72,7 +72,142 @@ int main() {
 	// STUFFs HAPPENIN HERE
 	// =============================================================================
 
-	
+	while (true) {
+		// Read input report
+		unsigned char input_report_buffer[INPUT_REPORT_SIZE];
+		if (!readInputReport(device, input_report_buffer)) {
+			std::cerr << "Error reading input report" << std::endl;
+			continue;
+		}
+
+		// _________________________________________________________
+		// Check if special buttons are pressed
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::SHIFT)) {
+			std::cout << "SHIFT button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::SHIFT, 1.0f);
+		}
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::REVERSE)) {
+			std::cout << "REVERSE button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::REVERSE, 1.0f);
+		}
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::TYPE)) {
+			std::cout << "TYPE button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::TYPE, 1.0f);
+		}
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::SIZE)) {
+			std::cout << "SIZE button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::SIZE, 1.0f);
+		}
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::BROWSE)) {
+			std::cout << "BROWSE button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::BROWSE, 1.0f);
+		}
+		if (isSpecialButtonPressed(input_report_buffer, SpecialButton::SELECTOR_WHEEL)) {
+			std::cout << "SELECTOR_WHEEL button is pressed" << std::endl;
+		}
+
+		// _________________________________________________________
+		// Check if stop button is pressed
+		if (isStopButtonPressed(input_report_buffer, StopButton::STOP1)) {
+			std::cout << "STOP1 button is pressed" << std::endl;
+			setStopButtonLED(StopLEDButton::STOP1, 1.0f);
+		}
+		if (isStopButtonPressed(input_report_buffer, StopButton::STOP2)) {
+			std::cout << "STOP2 button is pressed" << std::endl;
+			setStopButtonLED(StopLEDButton::STOP2, 1.0f);
+		}
+		if (isStopButtonPressed(input_report_buffer, StopButton::STOP3)) {
+			std::cout << "STOP3 button is pressed" << std::endl;
+			setStopButtonLED(StopLEDButton::STOP3, 1.0f);
+		}
+		if (isStopButtonPressed(input_report_buffer, StopButton::STOP4)) {
+			std::cout << "STOP4 button is pressed" << std::endl;
+			setStopButtonLED(StopLEDButton::STOP4, 1.0f);
+		}
+
+		// _________________________________________________________
+		// Check if control button is pressed
+		if (isControlButtonPressed(input_report_buffer, ControlButton::SYNC)) {
+			std::cout << "SYNC button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::SYNC, 1.0f);
+		}
+		if (isControlButtonPressed(input_report_buffer, ControlButton::QUANT)) {
+			std::cout << "QUANT button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::QUANT, 1.0f);
+		}
+		if (isControlButtonPressed(input_report_buffer, ControlButton::CAPTURE)) {
+			std::cout << "CAPTURE button is pressed" << std::endl;
+			setSpecialButtonLED(SpecialLEDButton::CAPTURE, 1.0f);
+		}
+
+		// _________________________________________________________
+		// Check if Matrix buttons are pressed
+		if (isMatrixButtonPressed(input_report_buffer, 1, 1)) {
+			std::cout << "Matrix button (1,1) is pressed" << std::endl;
+			setMatrixButtonLED(1, 1, LEDColor::red, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 1, 2)) {
+			std::cout << "Matrix button (1,2) is pressed" << std::endl;
+			setMatrixButtonLED(1, 2, LEDColor::lightorange, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 1, 3)) {
+			std::cout << "Matrix button (1,3) is pressed" << std::endl;
+			setMatrixButtonLED(1, 3, LEDColor::orange, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 1, 4)) {
+			std::cout << "Matrix button (1,4) is pressed" << std::endl;
+			setMatrixButtonLED(1, 4, LEDColor::warmyellow, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 2, 1)) {
+			std::cout << "Matrix button (2,1) is pressed" << std::endl;
+			setMatrixButtonLED(2, 1, LEDColor::yellow, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 2, 2)) {
+			std::cout << "Matrix button (2,2) is pressed" << std::endl;
+			setMatrixButtonLED(2, 2, LEDColor::lime, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 2, 3)) {
+			std::cout << "Matrix button (2,3) is pressed" << std::endl;
+			setMatrixButtonLED(2, 3, LEDColor::green, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 2, 4)) {
+			std::cout << "Matrix button (2,4) is pressed" << std::endl;
+			setMatrixButtonLED(2, 4, LEDColor::mint, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 3, 1)) {
+			std::cout << "Matrix button (3,1) is pressed" << std::endl;
+			setMatrixButtonLED(3, 1, LEDColor::cyan, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 3, 2)) {
+			std::cout << "Matrix button (3,2) is pressed" << std::endl;
+			setMatrixButtonLED(3, 2, LEDColor::turquise, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 3, 3)) {
+			std::cout << "Matrix button (3,3) is pressed" << std::endl;
+			setMatrixButtonLED(3, 3, LEDColor::blue, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 3, 4)) {
+			std::cout << "Matrix button (3,4) is pressed" << std::endl;
+			setMatrixButtonLED(3, 4, LEDColor::plum, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 4, 1)) {
+			std::cout << "Matrix button (4,1) is pressed" << std::endl;
+			setMatrixButtonLED(4, 1, LEDColor::violet, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 4, 2)) {
+			std::cout << "Matrix button (4,2) is pressed" << std::endl;
+			setMatrixButtonLED(4, 2, LEDColor::purple, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 4, 3)) {
+			std::cout << "Matrix button (4,3) is pressed" << std::endl;
+			setMatrixButtonLED(4, 3, LEDColor::magenta, 1.0f);
+		}
+		if (isMatrixButtonPressed(input_report_buffer, 4, 4)) {
+			std::cout << "Matrix button (4,4) is pressed" << std::endl;
+			setMatrixButtonLED(4, 4, LEDColor::fuchsia, 1.0f);
+		}
+
+	}
 
 
 	// =============================================================================
