@@ -193,23 +193,25 @@ void startupSequence(hid_device* device) {
     
     std::cout << "  - Animation complete, setting final LED state..." << std::endl;
     
-    // Set all special button LEDs to 50% (browse 25%) brightness
+    // Set all special button LEDs
     setSpecialButtonLED(SpecialLEDButton::BROWSE, 0.1f, true);
     setSpecialButtonLED(SpecialLEDButton::SIZE, 0.1f, true);
     setSpecialButtonLED(SpecialLEDButton::TYPE, 0.1f, true);
     setSpecialButtonLED(SpecialLEDButton::REVERSE, 0.1f, true);
     setSpecialButtonLED(SpecialLEDButton::SHIFT, 0.1f, true);
-    setSpecialButtonLED(SpecialLEDButton::CAPTURE, 0.1f, true);
-    setSpecialButtonLED(SpecialLEDButton::QUANT, 0.1f, true);
-    setSpecialButtonLED(SpecialLEDButton::SYNC, 0.1f, true);
 
-    // Set all stop button LEDs to 50% brightness
+    // Set all control buttons
+    setControlButtonLED(ControlLEDButton::CAPTURE, 0.1f, true);
+    setControlButtonLED(ControlLEDButton::QUANT, 0.1f, true);
+    setControlButtonLED(ControlLEDButton::SYNC, 0.1f, true);
+
+    // Set all stop button LEDs
     setStopButtonLED(StopLEDButton::STOP1, 0.1f, true);
     setStopButtonLED(StopLEDButton::STOP2, 0.1f, true);
     setStopButtonLED(StopLEDButton::STOP3, 0.1f, true);
     setStopButtonLED(StopLEDButton::STOP4, 0.1f, true);
 
-    // Set matrix LEDs to 25% brightness
+    // Set matrix LEDs
     setMatrixButtonLED(1, 1, LEDColor::red, 0.2f, true);
     setMatrixButtonLED(1, 2, LEDColor::orange, 0.2f, true);
     setMatrixButtonLED(1, 3, LEDColor::lightorange, 0.2f, true);

@@ -14,7 +14,8 @@ const unsigned char LED_REPORT_ID = 0x80;    // First byte is always 0x80
 // Byte positions in the LED report for different LED groups
 const int LED_BYTE_7SEG_RIGHT_START = 1;     // Right 7-segment display (bytes 1-8)
 const int LED_BYTE_7SEG_LEFT_START = 9;      // Left 7-segment display (bytes 9-16)
-const int LED_BYTE_SPECIAL_START = 17;       // Special buttons (bytes 17-24)
+const int LED_BYTE_SPECIAL_START = 17;       // Special buttons (bytes 17-21)
+const int LED_BYTE_CONTROL_START = 22;       // Control buttons (bytes 22-24)
 const int LED_BYTE_MATRIX_START = 25;        // RGB matrix buttons (bytes 25-72)
 const int LED_BYTE_STOP_START = 73;          // Stop buttons (bytes 73-80)
 
@@ -24,9 +25,11 @@ const int LED_OFFSET_SIZE = 1;       // Byte 18
 const int LED_OFFSET_TYPE = 2;       // Byte 19
 const int LED_OFFSET_REVERSE = 3;    // Byte 20
 const int LED_OFFSET_SHIFT = 4;      // Byte 21
-const int LED_OFFSET_CAPTURE = 5;    // Byte 22
-const int LED_OFFSET_QUANT = 6;      // Byte 23
-const int LED_OFFSET_SYNC = 7;       // Byte 24
+
+// Control button byte offsets (from LED_BYTE_CONTROL_START)
+const int LED_OFFSET_CAPTURE = 0;    // Byte 22
+const int LED_OFFSET_QUANT = 1;      // Byte 23
+const int LED_OFFSET_SYNC = 2;       // Byte 24
 
 // Stop button byte offsets (from LED_BYTE_STOP_START)
 const int LED_OFFSET_STOP4_RIGHT = 0;    // Byte 73
@@ -83,7 +86,11 @@ enum class SpecialLEDButton {
     SIZE,
     TYPE,
     REVERSE,
-    SHIFT,
+    SHIFT
+};
+
+// Control buttons enum (matches input_reader structure)
+enum class ControlLEDButton {
     CAPTURE,
     QUANT,
     SYNC
@@ -138,6 +145,9 @@ bool setMatrixButtonLED(int row, int col, LEDColor color, float brightness, bool
 // Special button LED functions (single brightness)  
 bool setSpecialButtonLED(SpecialLEDButton button, float brightness, bool store_led_state = true);
 
+// Control button LED functions (single brightness)
+bool setControlButtonLED(ControlLEDButton button, float brightness, bool store_led_state = true);
+
 // Stop button LED functions (each stop has 2 LEDs)
 bool setStopButtonLED(StopLEDButton button, float brightness, bool store_led_state = true);
 
@@ -160,6 +170,9 @@ BRGColor getColorWithBrightness(LEDColor color, float brightness);
 // Get index for special button enum (maps enum to array index)
 int getSpecialButtonIndex(SpecialLEDButton button);
 
+// Get index for control button enum (maps enum to array index)
+int getControlButtonIndex(ControlLEDButton button);
+
 // Get index for stop button enum (maps enum to array index)
 int getStopButtonIndex(StopLEDButton button);
 
@@ -168,6 +181,9 @@ LEDStateMatrix getMatrixButtonState(int row, int col);
 
 // Get original state for special buttons  
 LEDState getSpecialButtonState(SpecialLEDButton button);
+
+// Get original state for control buttons
+LEDState getControlButtonState(ControlLEDButton button);
 
 // Get original state for stop buttons
 LEDState getStopButtonState(StopLEDButton button);

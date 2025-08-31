@@ -30,8 +30,9 @@ static hid_device* current_device = nullptr;  // Store device for automatic send
 * to the LED functions, BEFORE conversion to 7-bit hardware format. This allows
 * other modules, such as the toggle system, to restore exact original values.
 */
-static LEDStateMatrix matrix_states[4][4];         // Original states for 4x4 matrix
-static LEDState special_states[8];                 // Original states for 8 special buttons
+static LEDStateMatrix matrix_states[5][5];         // Original states for 5x5 matrix
+static LEDState special_states[5];                 // Original states for 5 special buttons
+static LEDState control_states[3];                 // Original states for 3 control buttons
 static LEDState stop_states[4];                    // Original states for 4 stop buttons
 
 // =============================================================================
@@ -99,9 +100,25 @@ int getSpecialButtonIndex(SpecialLEDButton button) {
         case SpecialLEDButton::TYPE:    return 2;    // Array index 2
         case SpecialLEDButton::REVERSE: return 3;    // Array index 3
         case SpecialLEDButton::SHIFT:   return 4;    // Array index 4
-        case SpecialLEDButton::CAPTURE: return 5;    // Array index 5
-        case SpecialLEDButton::QUANT:   return 6;    // Array index 6
-        case SpecialLEDButton::SYNC:    return 7;    // Array index 7
+    }
+    return -1; // Error case - should never happen with valid enum
+}
+
+/*
+* Maps ControlLEDButton enum to array index
+*
+* This function provides explicit mapping from enum values to array indices.
+* This is safer than relying on implicit enum values and makes the mapping
+* clear and maintainable.
+*
+* @param button: The control button enum value
+* @return: Array index (0-2), or -1 if invalid button
+*/
+int getControlButtonIndex(ControlLEDButton button) {
+    switch (button) {
+        case ControlLEDButton::CAPTURE: return 0;    // Array index 0
+        case ControlLEDButton::QUANT:   return 1;    // Array index 1
+        case ControlLEDButton::SYNC:    return 2;    // Array index 2
     }
     return -1; // Error case - should never happen with valid enum
 }
@@ -149,7 +166,7 @@ LEDStateMatrix getMatrixButtonState(int row, int col) {
     }
     
     // Return the stored original state
-    return matrix_states[row-1][col-1];  // Convert to 0-based indexing
+    return matrix_states[row][col];
 }
 
 /*
@@ -167,13 +184,37 @@ LEDState getSpecialButtonState(SpecialLEDButton button) {
     int index = getSpecialButtonIndex(button);
     
     // Validate index
-    if (index < 0 || index > 7) {
+    if (index < 0 || index > 4) {
         std::cerr << "Error: Invalid special button in getSpecialButtonState()" << std::endl;
         return {0.0f}; // Return error state
     }
     
     // Return the stored original state
     return special_states[index];
+}
+
+/*
+ * Gets the original state for a control button
+ *
+ * Returns the original brightness that was set for this control button,
+ * before any 7-bit conversion. Color is always stored as white for control
+ * buttons since they only have single-color LEDs.
+ *
+ * @param button: The control button to query
+ * @return: LEDState with original brightness, or error state if invalid button
+ */
+LEDState getControlButtonState(ControlLEDButton button) {
+    // Map button to array index
+    int index = getControlButtonIndex(button);
+    
+    // Validate index
+    if (index < 0 || index > 2) {
+        std::cerr << "Error: Invalid control button in getControlButtonState()" << std::endl;
+        return {0.0f}; // Return error state
+    }
+    
+    // Return the stored original state
+    return control_states[index];
 }
 
 /*
@@ -361,19 +402,23 @@ bool initializeLEDController(hid_device* device) {
     led_buffer[0] = LED_REPORT_ID;
 
     // Step 5: Initialize state storage arrays to default values
-    // MATRIX:Initialize matrix states to black/off
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; col++) {
-            matrix_states[row][col] = {LEDColor::black, 0.0f};
-        }
-    }
     // SPECIAL BUTTONS: Initialize special button states to off (color irrelevant for special buttons)
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 5; i++) {
         special_states[i] = {0.0f};
+    }
+    // CONTROL BUTTONS: Initialize control button states to off (color irrelevant for control buttons)
+    for (int i = 0; i < 3; i++) {
+        control_states[i] = {0.0f};
     }
     // STOP BUTTONS: Initialize stop button states to off (color irrelevant for stop buttons)
     for (int i = 0; i < 4; i++) {
         stop_states[i] = {0.0f};
+    }
+    // MATRIX:Initialize matrix states to black/off
+    for (int row = 1; row <= 4; row++) {
+        for (int col = 1; col <= 4; col++) {
+            matrix_states[row][col] = {LEDColor::black, 0.0f};
+        }
     }
 
     // Step 6: Send initial empty report to turn off all LEDs
@@ -433,19 +478,23 @@ void clearAllLEDs() {
     memset(led_buffer + 1, 0, LED_REPORT_SIZE - 1);  // Skip first byte (report ID)
     
     // Step 2: Clear state storage arrays to match
-    // MATRIX: Clear matrix states to black/off
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; col++) {
-            matrix_states[row][col] = {LEDColor::black, 0.0f};
-        }
-    }
     // SPECIAL BUTTONS: Clear special button states to off (color irrelevant for special buttons)
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 5; i++) {
         special_states[i] = {0.0f};
+    }
+    // CONTROL BUTTONS: Clear control button states to off (color irrelevant for control buttons)
+    for (int i = 0; i < 3; i++) {
+        control_states[i] = {0.0f};
     }
     // STOP BUTTONS: Clear stop button states to off (color irrelevant for stop buttons)
     for (int i = 0; i < 4; i++) {
         stop_states[i] = {0.0f};
+    }
+    // MATRIX: Clear matrix states to black/off
+    for (int row = 1; row <= 4; row++) {
+        for (int col = 1; col <= 4; col++) {
+            matrix_states[row][col] = {LEDColor::black, 0.0f};
+        }
     }
 
     // Step 3: Send the cleared buffer to the F1
@@ -489,7 +538,7 @@ bool setMatrixButtonLED(int row, int col, LEDColor color, float brightness, bool
     // This happens BEFORE any conversion, preserving exact original values
     // Save state only if requested
     if (store_led_state) {
-        matrix_states[row - 1][col - 1] = {color, brightness};
+        matrix_states[row][col] = {color, brightness};
     }
 
     // Step 4: Calculate the byte position for this matrix button
@@ -532,7 +581,7 @@ bool setMatrixButtonLED(int row, int col, LEDColor color, float brightness, bool
 bool setSpecialButtonLED(SpecialLEDButton button, float brightness, bool store_led_state) {
     // Step 1: Get array index for this button
     int index = getSpecialButtonIndex(button);
-    if (index < 0 || index > 7) {
+    if (index < 0 || index > 4) {
         std::cerr << "Error: Invalid special button in setSpecialButtonLED()" << std::endl;
         return false;
     }
@@ -570,17 +619,74 @@ bool setSpecialButtonLED(SpecialLEDButton button, float brightness, bool store_l
         case SpecialLEDButton::SHIFT:
             byte_position = LED_BYTE_SPECIAL_START + LED_OFFSET_SHIFT;
             break;
-        case SpecialLEDButton::CAPTURE:
-            byte_position = LED_BYTE_SPECIAL_START + LED_OFFSET_CAPTURE;
-            break;
-        case SpecialLEDButton::QUANT:
-            byte_position = LED_BYTE_SPECIAL_START + LED_OFFSET_QUANT;
-            break;
-        case SpecialLEDButton::SYNC:
-            byte_position = LED_BYTE_SPECIAL_START + LED_OFFSET_SYNC;
-            break;
         default:
             std::cerr << "Error: Unknown special button requested" << std::endl;
+            return false;
+    }
+    
+    // Step 6: Set the LED value in the buffer
+    led_buffer[byte_position] = led_value;
+    
+    // Step 7: Send the updated buffer to the F1
+    if (current_device != nullptr) {
+        return sendLEDReport(current_device);
+    } else {
+        std::cerr << "Warning: No device connected, LED set in buffer only" << std::endl;
+        return false;
+    }
+}
+
+// =============================================================================
+// CONTROL BUTTON LED FUNCTIONS - Control control button LEDs
+// =============================================================================
+
+/*
+* Sets the LED of a control button to a specific brightness
+* Saves the original brightness in state storage
+* Control buttons only have single LEDs, so only brightness is controlled
+*
+* @param button: Which control button to control (using enum)
+* @param brightness: Brightness level (0.0 = off, 1.0 = full brightness)
+* @param store_led_state: Whether to store the LED state (original brightness)
+* @return: true if successful, false if error
+*/
+bool setControlButtonLED(ControlLEDButton button, float brightness, bool store_led_state) {
+    // Step 1: Get array index for this button
+    int index = getControlButtonIndex(button);
+    if (index < 0 || index > 2) {
+        std::cerr << "Error: Invalid control button in setControlButtonLED()" << std::endl;
+        return false;
+    }
+
+    // Step 2: Clamp brightness to valid range
+    if (brightness < 0.0f) brightness = 0.0f;
+    if (brightness > 1.0f) brightness = 1.0f;
+
+    // Step 3: Save original brightness
+    // This happens BEFORE any conversion, preserving exact original value
+    // Save only if requested
+    if (store_led_state) {
+        control_states[index] = {brightness};
+    }
+
+    // Step 4: Convert brightness to 7-bit value
+    unsigned char led_value = convertTo7Bit(127, brightness);
+
+    // Step 5: Determine byte position for this control button
+    int byte_position;
+    
+    switch (button) {
+        case ControlLEDButton::CAPTURE:
+            byte_position = LED_BYTE_CONTROL_START + LED_OFFSET_CAPTURE;
+            break;
+        case ControlLEDButton::QUANT:
+            byte_position = LED_BYTE_CONTROL_START + LED_OFFSET_QUANT;
+            break;
+        case ControlLEDButton::SYNC:
+            byte_position = LED_BYTE_CONTROL_START + LED_OFFSET_SYNC;
+            break;
+        default:
+            std::cerr << "Error: Unknown control button requested" << std::endl;
             return false;
     }
     
@@ -683,7 +789,7 @@ void printLEDStates() {
     for (int row = 1; row <= 4; row++) {
         std::cout << "  Row " << row << ": ";
         for (int col = 1; col <= 4; col++) {
-            LEDStateMatrix state = matrix_states[row-1][col-1];
+            LEDStateMatrix state = matrix_states[row][col];
             std::cout << "(" << (int)state.color << "," << std::fixed 
                       << std::setprecision(2) << state.brightness << ") ";
         }
@@ -693,10 +799,18 @@ void printLEDStates() {
     // Print special button states
     std::cout << "Special button states (original brightness):" << std::endl;
     const char* button_names[] = {"BROWSE", "SIZE", "TYPE", "REVERSE", 
-                                  "SHIFT", "CAPTURE", "QUANT", "SYNC"};
-    for (int i = 0; i < 8; i++) {
+                                  "SHIFT"};
+    for (int i = 0; i < 5; i++) {
         std::cout << "  " << button_names[i] << ": " << std::fixed 
                   << std::setprecision(2) << special_states[i].brightness << std::endl;
+    }
+
+    // Print control button states
+    std::cout << "Control button states (original brightness):" << std::endl;
+    const char* control_button_names[] = {"CAPTURE", "QUANT", "SYNC"};
+    for (int i = 0; i < 3; i++) {
+        std::cout << "  " << control_button_names[i] << ": " << std::fixed
+                  << std::setprecision(2) << control_states[i].brightness << std::endl;
     }
 
     // Print stop button states
@@ -735,13 +849,19 @@ void printLEDReport() {
     }
     std::cout << std::endl;
     
-    std::cout << "Special (17-24):     ";
-    for (int i = 17; i <= 24; i++) {
+    std::cout << "Special (17-21):     ";
+    for (int i = 17; i <= 21; i++) {
         std::cout << std::hex << std::setfill('0') << std::setw(2) 
                   << (int)led_buffer[i] << " ";
     }
     std::cout << std::endl;
-    
+
+    std::cout << "Control (22-24):     ";
+    for (int i = 22; i <= 24; i++) {
+        std::cout << std::hex << std::setfill('0') << std::setw(2) 
+                  << (int)led_buffer[i] << " ";
+    }
+
     std::cout << "Matrix (25-72):      ";
     for (int i = 25; i <= 72; i++) {
         std::cout << std::hex << std::setfill('0') << std::setw(2) 
@@ -787,16 +907,25 @@ void testAllLEDs() {
     std::cout << "Testing special button LEDs..." << std::endl;
     SpecialLEDButton special_buttons[] = {
         SpecialLEDButton::BROWSE, SpecialLEDButton::SIZE, SpecialLEDButton::TYPE,
-        SpecialLEDButton::REVERSE, SpecialLEDButton::SHIFT, SpecialLEDButton::CAPTURE,
-        SpecialLEDButton::QUANT, SpecialLEDButton::SYNC
+        SpecialLEDButton::REVERSE, SpecialLEDButton::SHIFT
     };
     
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 5; i++) {
         setSpecialButtonLED(special_buttons[i], 0.8f, false);
         usleep(100000);  // Sleep for 100ms
     }
     std::cout << "All special button LEDs turned on" << std::endl;
-    
+
+    // Test control button LEDs
+    std::cout << "Testing control button LEDs..." << std::endl;
+    ControlLEDButton control_buttons[] = {
+        ControlLEDButton::CAPTURE, ControlLEDButton::QUANT, ControlLEDButton::SYNC
+    };
+    for (int i = 0; i < 3; i++) {
+        setControlButtonLED(control_buttons[i], 0.8f, false);
+        usleep(100000);  // Sleep for 100ms
+    }
+
     // Test stop button LEDs
     std::cout << "Testing stop button LEDs..." << std::endl;
     for (int i = 1; i <= 4; i++) {
