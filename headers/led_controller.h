@@ -43,6 +43,7 @@ const int MATRIX_LEDS_PER_BUTTON = 3;    // Each matrix button has 3 LEDs (B, R,
 const int MATRIX_ROWS = 4;               // 4 rows in the matrix
 const int MATRIX_COLS = 4;               // 4 columns in the matrix
 
+
 // =============================================================================
 // COLOR SYSTEM - All available colors with BRG values
 // =============================================================================
@@ -90,14 +91,40 @@ enum class SpecialLEDButton {
 
 // Stop buttons enum (matches input_reader structure) 
 enum class StopLEDButton {
-    STOP1 = 1,
-    STOP2 = 2,
-    STOP3 = 3,
-    STOP4 = 4
+    STOP1,
+    STOP2,
+    STOP3,
+    STOP4
 };
 
+
 // =============================================================================
-// FUNCTION DECLARATIONS - What functions are provided to other files
+// STATE STORAGE SYSTEM - NEW! Parallel storage for original LED states
+// =============================================================================
+
+/*
+* LED State Structure - Stores original color and brightness values
+* 
+* This structure preserves the original color and brightness values that were
+* passed to the LED functions, before they get converted to 7-bit hardware values.
+* This allows to restore exact original states after toggling.
+* 
+* For matrix buttons (LEDStateMatrix): Both color and brightness are meaningful
+* For other buttons (LEDState): Only brightness is meaningful (only one color)
+*/
+struct LEDStateMatrix {
+    LEDColor color;      // Original color
+    float brightness;    // Original brightness
+};
+
+struct LEDState {
+        float brightness;    // Original brightness
+};
+
+
+
+// =============================================================================
+// FUNCTION DECLARATIONS - Functions are provided to other files
 // =============================================================================
 
 // Main LED system functions
@@ -106,24 +133,53 @@ bool sendLEDReport(hid_device* device);
 void clearAllLEDs();
 
 // Matrix LED functions (RGB buttons)
-bool setMatrixButtonLED(int row, int col, LEDColor color, float brightness);
-bool turnOffMatrixButtonLED(int row, int col);
+bool setMatrixButtonLED(int row, int col, LEDColor color, float brightness, bool store_led_state = true);
 
 // Special button LED functions (single brightness)  
-bool setSpecialButtonLED(SpecialLEDButton button, float brightness);
-bool turnOffSpecialButtonLED(SpecialLEDButton button);
+bool setSpecialButtonLED(SpecialLEDButton button, float brightness, bool store_led_state = true);
 
 // Stop button LED functions (each stop has 2 LEDs)
-bool setStopButtonLED(StopLEDButton button, float brightness);
-bool turnOffStopButtonLED(StopLEDButton button);
+bool setStopButtonLED(StopLEDButton button, float brightness, bool store_led_state = true);
 
 // Color system functions
 BRGColor getColorWithBrightness(LEDColor color, float brightness);
 
-// Utility functions for testing and debugging
+
+// =============================================================================
+// STATE STORAGE FUNCTIONS - Access to original LED states
+// =============================================================================
+
+/*
+* State Storage Access Functions
+* 
+* These functions allow other modules (like the toggle system) to access
+* the original color and brightness values that were set for each LED,
+* before conversion to 7-bit hardware format.
+*/
+
+// Get index for special button enum (maps enum to array index)
+int getSpecialButtonIndex(SpecialLEDButton button);
+
+// Get index for stop button enum (maps enum to array index)
+int getStopButtonIndex(StopLEDButton button);
+
+// Get original state for matrix buttons
+LEDStateMatrix getMatrixButtonState(int row, int col);
+
+// Get original state for special buttons  
+LEDState getSpecialButtonState(SpecialLEDButton button);
+
+// Get original state for stop buttons
+LEDState getStopButtonState(StopLEDButton button);
+
+
+// =============================================================================
+// UTILITY FUNCTIONS - Testing and Debugging
+// =============================================================================
+
 void printLEDReport();
 void testAllLEDs();
-
+void printLEDStates();
 
 
 #endif // LED_CONTROLLER_H

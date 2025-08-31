@@ -43,11 +43,11 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 1: Start with single LED at (4,4) - dim green
-    setMatrixButtonLED(4, 4, LEDColor::green, 0.5f);
+    setMatrixButtonLED(4, 4, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 2:
-    setMatrixButtonLED(4, 4, LEDColor::green, 1.0f);
+    setMatrixButtonLED(4, 4, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -55,13 +55,13 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 3:
-    setMatrixButtonLED(3, 4, LEDColor::green, 0.5f);
-    setMatrixButtonLED(4, 3, LEDColor::green, 0.5f);
+    setMatrixButtonLED(3, 4, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(4, 3, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 4:
-    setMatrixButtonLED(3, 4, LEDColor::green, 1.0f);
-    setMatrixButtonLED(4, 3, LEDColor::green, 1.0f);
+    setMatrixButtonLED(3, 4, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(4, 3, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -69,17 +69,17 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 5:
-    setMatrixButtonLED(4, 4, LEDColor::green, 0.5f);  // Fade corner
-    setMatrixButtonLED(2, 4, LEDColor::green, 0.5f);  // New LEDs dim
-    setMatrixButtonLED(3, 3, LEDColor::green, 0.5f);
-    setMatrixButtonLED(4, 2, LEDColor::green, 0.5f);
+    setMatrixButtonLED(4, 4, LEDColor::green, 0.5f, false);  // Fade corner
+    setMatrixButtonLED(2, 4, LEDColor::green, 0.5f, false);  // New LEDs dim
+    setMatrixButtonLED(3, 3, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(4, 2, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 6:
-    turnOffMatrixButtonLED(4, 4);  // Turn off corner
-    setMatrixButtonLED(2, 4, LEDColor::green, 1.0f);
-    setMatrixButtonLED(3, 3, LEDColor::green, 1.0f);
-    setMatrixButtonLED(4, 2, LEDColor::green, 1.0f);
+    setMatrixButtonLED(4, 4, LEDColor::black, 0.0f, false); // Turn off
+    setMatrixButtonLED(2, 4, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(3, 3, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(4, 2, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -87,21 +87,21 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 7:
-    setMatrixButtonLED(3, 4, LEDColor::green, 0.5f);  // Fade second diagonal
-    setMatrixButtonLED(4, 3, LEDColor::green, 0.5f);
-    setMatrixButtonLED(1, 4, LEDColor::green, 0.5f);  // New main diagonal dim
-    setMatrixButtonLED(2, 3, LEDColor::green, 0.5f);
-    setMatrixButtonLED(3, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(4, 1, LEDColor::green, 0.5f);
+    setMatrixButtonLED(3, 4, LEDColor::green, 0.5f, false);  // Fade second diagonal
+    setMatrixButtonLED(4, 3, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(1, 4, LEDColor::green, 0.5f, false);  // New main diagonal dim
+    setMatrixButtonLED(2, 3, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(3, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(4, 1, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 8:
-    turnOffMatrixButtonLED(3, 4);
-    turnOffMatrixButtonLED(4, 3);
-    setMatrixButtonLED(1, 4, LEDColor::green, 1.0f);
-    setMatrixButtonLED(2, 3, LEDColor::green, 1.0f);
-    setMatrixButtonLED(3, 2, LEDColor::green, 1.0f);
-    setMatrixButtonLED(4, 1, LEDColor::green, 1.0f);
+    setMatrixButtonLED(3, 4, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(4, 3, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(1, 4, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(2, 3, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(3, 2, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(4, 1, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -109,21 +109,21 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 9:
-    setMatrixButtonLED(2, 4, LEDColor::green, 0.5f);  // Fade third diagonal
-    setMatrixButtonLED(3, 3, LEDColor::green, 0.5f);
-    setMatrixButtonLED(4, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(1, 3, LEDColor::green, 0.5f);  // New fifth diagonal dim
-    setMatrixButtonLED(2, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(3, 1, LEDColor::green, 0.5f);
+    setMatrixButtonLED(2, 4, LEDColor::green, 0.5f, false);  // Fade third diagonal
+    setMatrixButtonLED(3, 3, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(4, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(1, 3, LEDColor::green, 0.5f, false);  // New fifth diagonal dim
+    setMatrixButtonLED(2, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(3, 1, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 10:
-    turnOffMatrixButtonLED(2, 4);  // Turn off third diagonal
-    turnOffMatrixButtonLED(3, 3);
-    turnOffMatrixButtonLED(4, 2);
-    setMatrixButtonLED(1, 3, LEDColor::green, 1.0f);
-    setMatrixButtonLED(2, 2, LEDColor::green, 1.0f);
-    setMatrixButtonLED(3, 1, LEDColor::green, 1.0f);
+    setMatrixButtonLED(2, 4, LEDColor::black, 0.0f, false);  // Turn off third diagonal
+    setMatrixButtonLED(3, 3, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(4, 2, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(1, 3, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(2, 2, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(3, 1, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -131,21 +131,21 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 11:
-    setMatrixButtonLED(1, 4, LEDColor::green, 0.5f);  // Fade main diagonal
-    setMatrixButtonLED(2, 3, LEDColor::green, 0.5f);
-    setMatrixButtonLED(3, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(4, 1, LEDColor::green, 0.5f);
-    setMatrixButtonLED(1, 2, LEDColor::green, 0.5f);  // New sixth diagonal dim
-    setMatrixButtonLED(2, 1, LEDColor::green, 0.5f);
+    setMatrixButtonLED(1, 4, LEDColor::green, 0.5f, false);  // Fade main diagonal
+    setMatrixButtonLED(2, 3, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(3, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(4, 1, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(1, 2, LEDColor::green, 0.5f, false);  // New sixth diagonal dim
+    setMatrixButtonLED(2, 1, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 12:
-    turnOffMatrixButtonLED(1, 4);
-    turnOffMatrixButtonLED(2, 3);
-    turnOffMatrixButtonLED(3, 2);
-    turnOffMatrixButtonLED(4, 1);
-    setMatrixButtonLED(1, 2, LEDColor::green, 1.0f);
-    setMatrixButtonLED(2, 1, LEDColor::green, 1.0f);
+    setMatrixButtonLED(1, 4, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(2, 3, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(3, 2, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(4, 1, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(1, 2, LEDColor::green, 1.0f, false);
+    setMatrixButtonLED(2, 1, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -153,17 +153,17 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 13:
-    setMatrixButtonLED(1, 3, LEDColor::green, 0.5f);  // Fade fifth diagonal
-    setMatrixButtonLED(2, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(3, 1, LEDColor::green, 0.5f);
-    setMatrixButtonLED(1, 1, LEDColor::green, 0.5f);  // Final corner dim
+    setMatrixButtonLED(1, 3, LEDColor::green, 0.5f, false);  // Fade fifth diagonal
+    setMatrixButtonLED(2, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(3, 1, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(1, 1, LEDColor::green, 0.5f, false);  // Final corner dim
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 14:
-    turnOffMatrixButtonLED(1, 3);
-    turnOffMatrixButtonLED(2, 2);
-    turnOffMatrixButtonLED(3, 1);
-    setMatrixButtonLED(1, 1, LEDColor::green, 1.0f);
+    setMatrixButtonLED(1, 3, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(2, 2, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(3, 1, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(1, 1, LEDColor::green, 1.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // =============================================================================
@@ -171,21 +171,21 @@ void startupSequence(hid_device* device) {
     // =============================================================================
     
     // Step 15:
-    setMatrixButtonLED(1, 2, LEDColor::green, 0.5f);
-    setMatrixButtonLED(2, 1, LEDColor::green, 0.5f);
+    setMatrixButtonLED(1, 2, LEDColor::green, 0.5f, false);
+    setMatrixButtonLED(2, 1, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 16:
-    turnOffMatrixButtonLED(1, 2);
-    turnOffMatrixButtonLED(2, 1);
+    setMatrixButtonLED(1, 2, LEDColor::black, 0.0f, false);
+    setMatrixButtonLED(2, 1, LEDColor::black, 0.0f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
     
     // Step 17: Final fade - corner dims
-    setMatrixButtonLED(1, 1, LEDColor::green, 0.5f);
+    setMatrixButtonLED(1, 1, LEDColor::green, 0.5f, false);
     std::this_thread::sleep_for(std::chrono::milliseconds(step_delay_ms));
 
     // Step 18: Final fade - all dims
-    turnOffMatrixButtonLED(1, 1);
+    setMatrixButtonLED(1, 1, LEDColor::black, 0.0f, false);
 
     // =============================================================================
     // FINAL STATE: Turn on all LEDs at specified brightness
@@ -193,43 +193,39 @@ void startupSequence(hid_device* device) {
     
     std::cout << "  - Animation complete, setting final LED state..." << std::endl;
     
-    // Clear all LEDs first
-    clearAllLEDs();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    
     // Set all special button LEDs to 50% (browse 25%) brightness
-    setSpecialButtonLED(SpecialLEDButton::BROWSE, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::SIZE, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::TYPE, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::REVERSE, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::SHIFT, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::CAPTURE, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::QUANT, 0.1f);
-    setSpecialButtonLED(SpecialLEDButton::SYNC, 0.1f);
+    setSpecialButtonLED(SpecialLEDButton::BROWSE, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::SIZE, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::TYPE, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::REVERSE, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::SHIFT, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::CAPTURE, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::QUANT, 0.1f, true);
+    setSpecialButtonLED(SpecialLEDButton::SYNC, 0.1f, true);
 
     // Set all stop button LEDs to 50% brightness
-    setStopButtonLED(StopLEDButton::STOP1, 0.1f);
-    setStopButtonLED(StopLEDButton::STOP2, 0.1f);
-    setStopButtonLED(StopLEDButton::STOP3, 0.1f);
-    setStopButtonLED(StopLEDButton::STOP4, 0.1f);
+    setStopButtonLED(StopLEDButton::STOP1, 0.1f, true);
+    setStopButtonLED(StopLEDButton::STOP2, 0.1f, true);
+    setStopButtonLED(StopLEDButton::STOP3, 0.1f, true);
+    setStopButtonLED(StopLEDButton::STOP4, 0.1f, true);
 
     // Set matrix LEDs to 25% brightness
-    setMatrixButtonLED(1, 1, LEDColor::red, 0.2f);
-    setMatrixButtonLED(1, 2, LEDColor::orange, 0.2f);
-    setMatrixButtonLED(1, 3, LEDColor::lightorange, 0.2f);
-    setMatrixButtonLED(1, 4, LEDColor::warmyellow, 0.2f);
-    setMatrixButtonLED(2, 1, LEDColor::yellow, 0.2f);
-    setMatrixButtonLED(2, 2, LEDColor::lime, 0.2f);
-    setMatrixButtonLED(2, 3, LEDColor::green, 0.2f);
-    setMatrixButtonLED(2, 4, LEDColor::mint, 0.2f);
-    setMatrixButtonLED(3, 1, LEDColor::cyan, 0.2f);
-    setMatrixButtonLED(3, 2, LEDColor::turquise, 0.2f);
-    setMatrixButtonLED(3, 3, LEDColor::blue, 0.2f);
-    setMatrixButtonLED(3, 4, LEDColor::plum, 0.2f);
-    setMatrixButtonLED(4, 1, LEDColor::violet, 0.2f);
-    setMatrixButtonLED(4, 2, LEDColor::purple, 0.2f);
-    setMatrixButtonLED(4, 3, LEDColor::magenta, 0.2f);
-    setMatrixButtonLED(4, 4, LEDColor::fuchsia, 0.2f);
+    setMatrixButtonLED(1, 1, LEDColor::red, 0.2f, true);
+    setMatrixButtonLED(1, 2, LEDColor::orange, 0.2f, true);
+    setMatrixButtonLED(1, 3, LEDColor::lightorange, 0.2f, true);
+    setMatrixButtonLED(1, 4, LEDColor::warmyellow, 0.2f, true);
+    setMatrixButtonLED(2, 1, LEDColor::yellow, 0.2f, true);
+    setMatrixButtonLED(2, 2, LEDColor::lime, 0.2f, true);
+    setMatrixButtonLED(2, 3, LEDColor::green, 0.2f, true);
+    setMatrixButtonLED(2, 4, LEDColor::mint, 0.2f, true);
+    setMatrixButtonLED(3, 1, LEDColor::cyan, 0.2f, true);
+    setMatrixButtonLED(3, 2, LEDColor::turquise, 0.2f, true);
+    setMatrixButtonLED(3, 3, LEDColor::blue, 0.2f, true);
+    setMatrixButtonLED(3, 4, LEDColor::plum, 0.2f, true);
+    setMatrixButtonLED(4, 1, LEDColor::violet, 0.2f, true);
+    setMatrixButtonLED(4, 2, LEDColor::purple, 0.2f, true);
+    setMatrixButtonLED(4, 3, LEDColor::magenta, 0.2f, true);
+    setMatrixButtonLED(4, 4, LEDColor::fuchsia, 0.2f, true);
 
     std::cout << "  - Startup sequence completed!" << std::endl;
 }

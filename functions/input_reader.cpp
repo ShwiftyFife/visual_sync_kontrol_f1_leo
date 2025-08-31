@@ -22,14 +22,14 @@ bool readInputReport(hid_device *device, unsigned char *buffer) {
     // Step 1: Check if device is valid
     // Checks if pointers are valid before using them! This prevents crashes.
     if (device == nullptr) {
-        std::cerr << "Error: Device is null (not connected any longer?)" << std::endl;
+        std::cerr << "readInputReport Error: Device is null (not connected any longer?)" << std::endl;
         return false;
     }
 
     // Step 2: Check if buffer is valid
     // Checks if pointers are valid before using them! This prevents crashes.
     if (buffer == nullptr) {
-        std::cerr << "Error: Buffer is null" << std::endl;
+        std::cerr << "readInputReport Error: Buffer is null" << std::endl;
         return false;
     }
 
@@ -39,7 +39,7 @@ bool readInputReport(hid_device *device, unsigned char *buffer) {
 
     // Step 4: Check if the read operation was successfull
     if (bytes_read < 0) {
-        std::cerr << "Error: Expected " << INPUT_REPORT_SIZE
+        std::cerr << "readInputReport Error: Expected " << INPUT_REPORT_SIZE
                   << " bytes, but got " << bytes_read << " bytes" << std::endl;
         return false;
     }
@@ -47,7 +47,7 @@ bool readInputReport(hid_device *device, unsigned char *buffer) {
     // Step 6: Verify this is the correct type of report
     // The F1 always starts input reports with 0x01
     if (buffer[0] != INPUT_REPORT_ID) {
-        std::cerr << "Error: Wrong report ID. Expected 0x"
+        std::cerr << "readInputReport Error: Wrong report ID. Expected 0x"
                   << std::hex << (int)INPUT_REPORT_ID
                   << ", got 0x" << std::hex << (int)buffer[0] << std::endl;
         return false;
