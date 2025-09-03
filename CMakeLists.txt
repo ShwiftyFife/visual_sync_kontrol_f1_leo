@@ -56,6 +56,7 @@ add_executable(traktor
     functions/input_reader.cpp
     functions/led_controller.cpp
     functions/led_controller_toggle.cpp
+    functions/input_reader_wheel.cpp
 
 )
 

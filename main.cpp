@@ -18,6 +18,7 @@
 #include "headers/input_reader.h"							// Include input read module
 #include "headers/led_controller.h"						// Include LED control module
 #include "headers/led_controller_toggle.h"		// Include LED controller toggle module
+#include "headers/input_reader_wheel.h"				// Include wheel input read module
 
 
 // F1 device identifiers (same as before)
@@ -50,6 +51,10 @@ int main() {
 		hid_device *device;
 		// Declare button toggle system
 		ButtonToggleSystem btn_toggle_system;
+		// Declare wheel reader system
+		WheelInputReader wheel_input_reader;
+		// Declare current effects page variable
+		int current_effect_page = 1;
 
 		// Open the device using the VendorID, ProductID, and optionally the Serial number.
 		// If the device is opened successfully, the pointer will not be null.
@@ -65,6 +70,9 @@ int main() {
 
 				// Initialize button toggle system
 				btn_toggle_system.initialize();
+
+				// Initialize wheel input reader and set first page
+				wheel_input_reader.initialize();
 
 				// Send success message
 				std::cout << "" << std::endl;
@@ -87,34 +95,59 @@ int main() {
 		// STUFFs HAPPENIN HERE
 		// =============================================================================
 
-
 		while (true) {
+
+				// =======================================
 				// Read input report
+				// =======================================
 				unsigned char input_report_buffer[INPUT_REPORT_SIZE];
 				if (!readInputReport(device, input_report_buffer)) {
 						std::cerr << "Error, shutting down..." << std::endl;
 						return -1;
 				}
 
-				// Check for special button toggles (only triggers on press, not hold)
+				// =======================================
+				// Read and update Selector Wheel rotation
+				// =======================================
+				// Check rotation
+				WheelDirection selector_wheel_direction = wheel_input_reader.getWheelDirection(input_report_buffer);
+
+				// Wheel debugging
+				wheel_input_reader.printWheelDebugInfo(input_report_buffer);
+
+				// Update the current page based on the wheel direction
+				if (selector_wheel_direction == WheelDirection::CLOCKWISE) {
+						current_effect_page = std::min(current_effect_page + 1, 99);  // Cap at 99 (std::min returns the smaller value of the two)
+						std::cout << "Scene: " << current_effect_page << std::endl;
+				} else if (selector_wheel_direction == WheelDirection::COUNTER_CLOCKWISE) {
+						current_effect_page = std::max(current_effect_page - 1, 1);  // Floor at 1 (std::max returns the larger value of the two)
+						std::cout << "Scene: " << current_effect_page << std::endl;
+				}
+
+				
+
+				// =======================================
+				// Check for button toggles
+				// =======================================
+				// Special button toggles (only triggers on press, not hold)
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::SHIFT, SpecialLEDButton::SHIFT);
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::REVERSE, SpecialLEDButton::REVERSE);
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::TYPE, SpecialLEDButton::TYPE);
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::SIZE, SpecialLEDButton::SIZE);
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::BROWSE, SpecialLEDButton::BROWSE);
 
-				// Check for control button toggles
+				// Control button toggles
 				btn_toggle_system.shouldToggleControlButton(input_report_buffer, ControlButton::CAPTURE, ControlLEDButton::CAPTURE);
 				btn_toggle_system.shouldToggleControlButton(input_report_buffer, ControlButton::QUANT, ControlLEDButton::QUANT);
 				btn_toggle_system.shouldToggleControlButton(input_report_buffer, ControlButton::SYNC, ControlLEDButton::SYNC);
 
-				// Check for stop button toggles
+				// Stop button toggles
 				btn_toggle_system.shouldToggleStopButton(input_report_buffer, StopButton::STOP1, StopLEDButton::STOP1);
 				btn_toggle_system.shouldToggleStopButton(input_report_buffer, StopButton::STOP2, StopLEDButton::STOP2);
 				btn_toggle_system.shouldToggleStopButton(input_report_buffer, StopButton::STOP3, StopLEDButton::STOP3);
 				btn_toggle_system.shouldToggleStopButton(input_report_buffer, StopButton::STOP4, StopLEDButton::STOP4);
 
-				// Check for matrix button toggles
+				// Matrix button toggles
 				for (int row = 1; row <= 4; row++) {
 					for (int col = 1; col <= 4; col++) {
 						btn_toggle_system.shouldToggleMatrixButton(input_report_buffer, row, col);
@@ -123,6 +156,12 @@ int main() {
 
 				// Update button states for next frame
 				btn_toggle_system.updateButtonStates(input_report_buffer);
+
+				// =======================================
+				// Update wheel state
+				// =======================================
+				wheel_input_reader.updateWheelState(input_report_buffer);
+
 		}
 
 	// =============================================================================
