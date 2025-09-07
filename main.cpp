@@ -19,6 +19,7 @@
 #include "headers/led_controller.h"						// Include LED control module
 #include "headers/led_controller_toggle.h"		// Include LED controller toggle module
 #include "headers/input_reader_wheel.h"				// Include wheel input read module
+#include "headers/led_controller_display.h"		// Include display control module
 
 
 // F1 device identifiers (same as before)
@@ -55,6 +56,8 @@ int main() {
 		WheelInputReader wheel_input_reader;
 		// Declare current effects page variable
 		int current_effect_page = 1;
+		// Delare display controller
+		DisplayController display_controller;
 
 		// Open the device using the VendorID, ProductID, and optionally the Serial number.
 		// If the device is opened successfully, the pointer will not be null.
@@ -73,6 +76,11 @@ int main() {
 
 				// Initialize wheel input reader and set first page
 				wheel_input_reader.initialize();
+
+				// Set first effects page on display
+				// Turn on left dot to indicate page is loaded
+				display_controller.setDisplayNumber(current_effect_page);
+				display_controller.setDisplayDot(1, true);
 
 				// Send success message
 				std::cout << "" << std::endl;
@@ -109,22 +117,36 @@ int main() {
 				// =======================================
 				// Read and update Selector Wheel rotation
 				// =======================================
-				// Check rotation
-				WheelDirection selector_wheel_direction = wheel_input_reader.getWheelDirection(input_report_buffer);
+				// Get wheel direction
+				WheelDirection selector_wheel_direction = wheel_input_reader.checkWheelRotation(input_report_buffer);
 
-				// Wheel debugging
-				wheel_input_reader.printWheelDebugInfo(input_report_buffer);
-
-				// Update the current page based on the wheel direction
+				// Select effects page accordingly
 				if (selector_wheel_direction == WheelDirection::CLOCKWISE) {
-						current_effect_page = std::min(current_effect_page + 1, 99);  // Cap at 99 (std::min returns the smaller value of the two)
-						std::cout << "Scene: " << current_effect_page << std::endl;
-				} else if (selector_wheel_direction == WheelDirection::COUNTER_CLOCKWISE) {
-						current_effect_page = std::max(current_effect_page - 1, 1);  // Floor at 1 (std::max returns the larger value of the two)
-						std::cout << "Scene: " << current_effect_page << std::endl;
+						// increase page by 1
+        		current_effect_page = std::min(current_effect_page + 1, 99);
+						// Update display
+						display_controller.setDisplayDot(1, false); // Turn off left dot when changing page
+						display_controller.setDisplayNumber(current_effect_page);
+        		// optional debug
+						std::cout << "Page: " << current_effect_page << std::endl;
+				}
+				else if (selector_wheel_direction == WheelDirection::COUNTER_CLOCKWISE) {
+						// decrease page by 1
+						current_effect_page = std::max(current_effect_page - 1, 1);
+						// Update display
+						display_controller.setDisplayDot(1, false); // Turn off left dot when changing page
+						display_controller.setDisplayNumber(current_effect_page);
+						// optional debug
+						std::cout << "Page: " << current_effect_page << std::endl;
 				}
 
-				
+				// Load effects page on selector wheel button press
+				if (isSpecialButtonPressed(input_report_buffer, SpecialButton::SELECTOR_WHEEL)) {
+						// Turn on left dot to indicate page is loaded
+						display_controller.setDisplayDot(1, true);
+						// optional debug
+					std::cout << "Loading page " << current_effect_page << "." << std::endl;
+				}
 
 				// =======================================
 				// Check for button toggles
@@ -156,11 +178,6 @@ int main() {
 
 				// Update button states for next frame
 				btn_toggle_system.updateButtonStates(input_report_buffer);
-
-				// =======================================
-				// Update wheel state
-				// =======================================
-				wheel_input_reader.updateWheelState(input_report_buffer);
 
 		}
 

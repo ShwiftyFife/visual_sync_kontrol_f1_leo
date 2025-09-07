@@ -42,13 +42,6 @@ endif()
 message(STATUS "HIDAPI include dir: ${HIDAPI_INCLUDE_DIR}")
 message(STATUS "HIDAPI library: ${HIDAPI_LIBRARY}")
 
-
-#include(FindPackageHandleStandardArgs)
-#find_package_handle_standard_args(HIDAPI
-#    DEFAULT_MSG
-#    HIDAPI_LIBRARY
-#    HIDAPI_INCLUDE_DIR)
-
 # Add executable
 add_executable(traktor 
     main.cpp
@@ -57,13 +50,13 @@ add_executable(traktor
     functions/led_controller.cpp
     functions/led_controller_toggle.cpp
     functions/input_reader_wheel.cpp
-
+    functions/led_controller_display.cpp
 )
 
 # Include directories
 target_include_directories(traktor PRIVATE 
     ${HIDAPI_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}  # This allows #include "headers/startup_effect.h" to work
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Link the HIDAPI library

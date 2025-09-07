@@ -16,8 +16,8 @@
 * It's persistent, so changing one LED does not affect the others.
 * The byte buffer is always ready to send to the F1 device.
 */
-static unsigned char led_buffer[LED_REPORT_SIZE];
-static hid_device* current_device = nullptr;  // Store device for automatic sending
+unsigned char led_buffer[LED_REPORT_SIZE];
+hid_device* current_device = nullptr;  // Store device for automatic sending
 
 // =============================================================================
 // PARALLEL STATE STORAGE - Preserve original color/brightness values

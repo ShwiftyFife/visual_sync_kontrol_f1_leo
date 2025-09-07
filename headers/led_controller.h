@@ -4,12 +4,22 @@
 #include <hidapi/hidapi.h>
 
 // =============================================================================
-// CONSTANTS - These define the structure of the F1's LED output reports
+// GLOBAL LED STATE BYTE BUFFER - Persistent byte buffer for all LED states
 // =============================================================================
 
 // LED output report structure
 const int LED_REPORT_SIZE = 81;              // F1 always expects 81-byte LED reports
 const unsigned char LED_REPORT_ID = 0x80;    // First byte is always 0x80
+
+// This byte buffer holds the current state of all LEDs on the F1.
+// It's persistent, so changing one LED does not affect the others.
+// The byte buffer is always ready to send to the F1 device.
+extern unsigned char led_buffer[LED_REPORT_SIZE];
+extern hid_device* current_device;
+
+// =============================================================================
+// CONSTANTS - These define the structure of the F1's LED output reports
+// =============================================================================
 
 // Byte positions in the LED report for different LED groups
 const int LED_BYTE_7SEG_RIGHT_START = 1;     // Right 7-segment display (bytes 1-8)
