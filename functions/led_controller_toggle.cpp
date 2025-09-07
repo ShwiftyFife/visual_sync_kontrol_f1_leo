@@ -48,27 +48,7 @@ bool ButtonToggleSystem::initialize() {
     std::cout << "Initializing Button Toggle System..." << std::endl;
     
     // Reset all led toggle states to false
-    resetAllToggleStates();
-
-    // initialize button state tracking to false
-    // SPECIAL BUTTONS
-    for (int i = 0; i < 5; i++) {
-        special_was_pressed[i] = false;
-    }
-    // CONTROL BUTTONS
-    for (int i = 0; i < 3; i++) {
-        control_was_pressed[i] = false;
-    }
-    // STOP BUTTONS
-    for (int i = 0; i < 4; i++) {
-        stop_was_pressed[i] = false;
-    }
-    // MATRIX BUTTONS
-    for (int row = 1; row <= 4; row++) {
-        for (int col = 1; col <= 4; col++) {
-            matrix_was_pressed[row][col] = false;
-        }
-    }
+    resetAllToggleStates();    
 
     // Output initialization status
     std::cout << "  - All toggle states reset to original" << std::endl;
@@ -80,26 +60,50 @@ bool ButtonToggleSystem::initialize() {
 * This means all buttons return to their scene colors/brightness
 */
 void ButtonToggleSystem::resetAllToggleStates() {
-    // Reset special button toggle states
-    for (int i = 0; i < 5; i++) {
-        special_toggled[i] = false;
-    }
-
-    // Reset control button toggle states
-    for (int i = 0; i < 3; i++) {
-        control_toggled[i] = false;
-    }
-
-    // Reset stop button toggle states
-    for (int i = 0; i < 4; i++) {
-        stop_toggled[i] = false;
-    }
-    // Reset matrix button toggle states
-    for (int row = 1; row <= 4; row++) {
-        for (int col = 1; col <= 4; col++) {
-            matrix_toggled[row][col] = false;
+    // ________________________________________
+    // Reset button press tracking states
+        // SPECIAL BUTTONS
+        for (int i = 0; i < 5; i++) {
+            special_was_pressed[i] = false;
         }
-    }
+        // CONTROL BUTTONS
+        for (int i = 0; i < 3; i++) {
+            control_was_pressed[i] = false;
+        }
+        // STOP BUTTONS
+        for (int i = 0; i < 4; i++) {
+            stop_was_pressed[i] = false;
+        }
+        // MATRIX BUTTONS
+        for (int row = 1; row <= 4; row++) {
+            for (int col = 1; col <= 4; col++) {
+                matrix_was_pressed[row][col] = false;
+            }
+        }
+
+    // ________________________________________
+    // Reset all toggle states to false (original state)
+        
+        // SPECIAL BUTTONS
+        for (int i = 0; i < 5; i++) {
+            special_toggled[i] = false;
+        }
+
+        // CONTROL BUTTONS
+        for (int i = 0; i < 3; i++) {
+            control_toggled[i] = false;
+        }
+
+        // STOP BUTTONS
+        for (int i = 0; i < 4; i++) {
+            stop_toggled[i] = false;
+        }
+        // MATRIX BUTTONS
+        for (int row = 1; row <= 4; row++) {
+            for (int col = 1; col <= 4; col++) {
+                matrix_toggled[row][col] = false;
+            }
+        }
 }
 
 // =============================================================================

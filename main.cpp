@@ -20,6 +20,7 @@
 #include "headers/led_controller_toggle.h"		// Include LED controller toggle module
 #include "headers/input_reader_wheel.h"				// Include wheel input read module
 #include "headers/led_controller_display.h"		// Include display control module
+#include "headers/led_scene_controller.h"     // Include LED scene controller module
 
 
 // F1 device identifiers (same as before)
@@ -58,6 +59,8 @@ int main() {
 		int current_effect_page = 1;
 		// Delare display controller
 		DisplayController display_controller;
+		// Declare LED scene controller
+		SceneController scene_controller;
 
 		// Open the device using the VendorID, ProductID, and optionally the Serial number.
 		// If the device is opened successfully, the pointer will not be null.
@@ -81,6 +84,9 @@ int main() {
 				// Turn on left dot to indicate page is loaded
 				display_controller.setDisplayNumber(current_effect_page);
 				display_controller.setDisplayDot(1, true);
+
+				// Load first effects page scene
+				scene_controller.setEffectsPageScene(current_effect_page);
 
 				// Send success message
 				std::cout << "" << std::endl;
@@ -127,8 +133,6 @@ int main() {
 						// Update display
 						display_controller.setDisplayDot(1, false); // Turn off left dot when changing page
 						display_controller.setDisplayNumber(current_effect_page);
-        		// optional debug
-						std::cout << "Page: " << current_effect_page << std::endl;
 				}
 				else if (selector_wheel_direction == WheelDirection::COUNTER_CLOCKWISE) {
 						// decrease page by 1
@@ -136,16 +140,16 @@ int main() {
 						// Update display
 						display_controller.setDisplayDot(1, false); // Turn off left dot when changing page
 						display_controller.setDisplayNumber(current_effect_page);
-						// optional debug
-						std::cout << "Page: " << current_effect_page << std::endl;
 				}
 
 				// Load effects page on selector wheel button press
 				if (isSpecialButtonPressed(input_report_buffer, SpecialButton::SELECTOR_WHEEL)) {
 						// Turn on left dot to indicate page is loaded
 						display_controller.setDisplayDot(1, true);
-						// optional debug
-					std::cout << "Loading page " << current_effect_page << "." << std::endl;
+						// Load effects page scene
+						scene_controller.setEffectsPageScene(current_effect_page);
+						// Reset button states
+						btn_toggle_system.resetAllToggleStates();
 				}
 
 				// =======================================

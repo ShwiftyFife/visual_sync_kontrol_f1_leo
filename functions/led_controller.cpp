@@ -598,7 +598,7 @@ bool setSpecialButtonLED(SpecialLEDButton button, float brightness, bool store_l
     }
 
     // Step 4: Convert brightness to 7-bit value (F1 hardware requirement)
-    unsigned char led_value = convertTo7Bit(127, brightness);  // Use max 7-bit value with brightness
+    unsigned char led_value = convertTo7Bit(255, brightness);  // Use max 7-bit value with brightness
     
     // Step 5: Determine which byte to set based on the button
     int byte_position;
@@ -670,7 +670,7 @@ bool setControlButtonLED(ControlLEDButton button, float brightness, bool store_l
     }
 
     // Step 4: Convert brightness to 7-bit value
-    unsigned char led_value = convertTo7Bit(127, brightness);
+    unsigned char led_value = convertTo7Bit(255, brightness);
 
     // Step 5: Determine byte position for this control button
     int byte_position;
@@ -736,7 +736,7 @@ bool setStopButtonLED(StopLEDButton button, float brightness, bool store_led_sta
     }
 
     // Step 4: Convert brightness to 7-bit value
-    unsigned char led_value = convertTo7Bit(127, brightness);
+    unsigned char led_value = convertTo7Bit(255, brightness);
 
     // Step 5: Determine byte positions for both LEDs of this stop button
     int left_byte, right_byte;

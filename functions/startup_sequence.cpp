@@ -210,24 +210,6 @@ void startupSequence(hid_device* device) {
     setStopButtonLED(StopLEDButton::STOP2, 0.1f, true);
     setStopButtonLED(StopLEDButton::STOP3, 0.1f, true);
     setStopButtonLED(StopLEDButton::STOP4, 0.1f, true);
-
-    // Set matrix LEDs
-    setMatrixButtonLED(1, 1, LEDColor::red, 0.2f, true);
-    setMatrixButtonLED(1, 2, LEDColor::orange, 0.2f, true);
-    setMatrixButtonLED(1, 3, LEDColor::lightorange, 0.2f, true);
-    setMatrixButtonLED(1, 4, LEDColor::warmyellow, 0.2f, true);
-    setMatrixButtonLED(2, 1, LEDColor::yellow, 0.2f, true);
-    setMatrixButtonLED(2, 2, LEDColor::lime, 0.2f, true);
-    setMatrixButtonLED(2, 3, LEDColor::green, 0.2f, true);
-    setMatrixButtonLED(2, 4, LEDColor::mint, 0.2f, true);
-    setMatrixButtonLED(3, 1, LEDColor::cyan, 0.2f, true);
-    setMatrixButtonLED(3, 2, LEDColor::turquise, 0.2f, true);
-    setMatrixButtonLED(3, 3, LEDColor::blue, 0.2f, true);
-    setMatrixButtonLED(3, 4, LEDColor::plum, 0.2f, true);
-    setMatrixButtonLED(4, 1, LEDColor::violet, 0.2f, true);
-    setMatrixButtonLED(4, 2, LEDColor::purple, 0.2f, true);
-    setMatrixButtonLED(4, 3, LEDColor::magenta, 0.2f, true);
-    setMatrixButtonLED(4, 4, LEDColor::fuchsia, 0.2f, true);
-
+ 
     std::cout << "  - Startup sequence completed!" << std::endl;
 }
