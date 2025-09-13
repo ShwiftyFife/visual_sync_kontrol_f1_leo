@@ -13,6 +13,8 @@
 #include <cstring>          // string.h gives access to C-style string functions.
 #include <chrono>
 #include <thread>
+#include <iomanip>
+#include <cmath>
 
 #include "headers/startup_sequence.h"					// Include startup effects module
 #include "headers/input_reader.h"							// Include input read module
@@ -21,6 +23,8 @@
 #include "headers/input_reader_wheel.h"				// Include wheel input read module
 #include "headers/led_controller_display.h"		// Include display control module
 #include "headers/led_scene_controller.h"     // Include LED scene controller module
+#include "headers/input_reader_knob.h"        // Include knob input read module
+#include "headers/input_reader_fader.h"       // Include fader input read module
 
 
 // F1 device identifiers (same as before)
@@ -55,6 +59,10 @@ int main() {
 		ButtonToggleSystem btn_toggle_system;
 		// Declare wheel reader system
 		WheelInputReader wheel_input_reader;
+		// Declare knob input reader
+		KnobInputReader knob_input_reader;
+		// Declare fader input reader
+		FaderInputReader fader_input_reader;
 		// Declare current effects page variable
 		int current_effect_page = 1;
 		// Delare display controller
@@ -151,6 +159,38 @@ int main() {
 						// Reset button states
 						btn_toggle_system.resetAllToggleStates();
 				}
+
+				// =======================================
+				// Read and update Knob values
+				// =======================================
+				//knob_input_reader.printKnobValues(input_report_buffer);
+				float knob_value_1 = knob_input_reader.getKnobValue(input_report_buffer, 1);
+				float knob_value_2 = knob_input_reader.getKnobValue(input_report_buffer, 2);
+				float knob_value_3 = knob_input_reader.getKnobValue(input_report_buffer, 3);
+				float knob_value_4 = knob_input_reader.getKnobValue(input_report_buffer, 4);
+
+				// =======================================
+				// Read and update Fader values
+				// =======================================
+				//fader_input_reader.printFaderValues(input_report_buffer);
+				float fader_value_1 = fader_input_reader.getFaderValue(input_report_buffer, 1);
+				float fader_value_2 = fader_input_reader.getFaderValue(input_report_buffer, 2);
+				float fader_value_3 = fader_input_reader.getFaderValue(input_report_buffer, 3);
+				float fader_value_4 = fader_input_reader.getFaderValue(input_report_buffer, 4);
+
+				// Print knob and fader values for debugging
+				std::cout << "Knob Values: "
+								<< "1: " << std::fixed << std::setprecision(3) << knob_value_1 << " | "
+								<< "2: " << std::fixed << std::setprecision(3) << knob_value_2 << " | "
+								<< "3: " << std::fixed << std::setprecision(3) << knob_value_3 << " | "
+								<< "4: " << std::fixed << std::setprecision(3) << knob_value_4 << " || "
+								<< "Fader Values: "
+								<< "1: " << std::fixed << std::setprecision(3) << fader_value_1 << " | "
+								<< "2: " << std::fixed << std::setprecision(3) << fader_value_2 << " | "
+								<< "3: " << std::fixed << std::setprecision(3) << fader_value_3 << " | "
+								<< "4: " << std::fixed << std::setprecision(3) << fader_value_4 << " || "
+								<< "        \r"; // Carriage return to overwrite the line
+				std::cout.flush();
 
 				// =======================================
 				// Check for button toggles

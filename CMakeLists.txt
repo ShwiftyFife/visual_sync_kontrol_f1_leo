@@ -52,6 +52,8 @@ add_executable(traktor
     functions/input_reader_wheel.cpp
     functions/led_controller_display.cpp
     functions/led_scene_controller.cpp
+    functions/input_reader_knob.cpp
+    functions/input_reader_fader.cpp
 )
 
 # Include directories
