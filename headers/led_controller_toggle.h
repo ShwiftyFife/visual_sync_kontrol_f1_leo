@@ -4,7 +4,24 @@
 #include "input_reader.h"   // Access to the input reading functions
 #include "led_controller.h" // Access to the LED controller functions and state structures
 
+// =============================================================================
+// MATRIX ZONE SYSTEM - For exclusive button toggling
+// =============================================================================
+
+enum class MatrixToggleZone {
+    FULL_MATRIX,        // All 16 buttons = 1 zone (default behavior)
+    LEFT_RIGHT_SPLIT    // Columns 1-2 and 3-4 = 2 independent zones
+};
+
+// =============================================================================
+// BUTTON TOGGLE SYSTEM - Main
+// =============================================================================
+
 struct ButtonToggleSystem {
+
+    // =======================================
+    // Variables to track button toggle states
+    // =======================================
     // Toggle state tracking arrays
     bool special_toggled[5];           // Track which special buttons are toggled
     bool control_toggled[3];           // Track which control buttons are toggled
@@ -17,9 +34,20 @@ struct ButtonToggleSystem {
     bool stop_was_pressed[4];          // Track if stop button was pressed in last frame
     bool matrix_was_pressed[5][5];     // Track if matrix button was pressed in last frame
 
-    // Constants
+    // =======================================
+    // Matrix zone mode configuration
+    // =======================================
+    MatrixToggleZone current_matrix_mode;  // Current zone configuration
+
+    // =======================================
+    // Matrix toggle brightness constant
+    // =======================================
     static constexpr float TOGGLED_BRIGHTNESS = 1.0f;
     
+    // =======================================
+    // Matrix main functions
+    // =======================================
+
     // Core functions
     bool initialize();
 
@@ -34,11 +62,20 @@ struct ButtonToggleSystem {
     bool shouldToggleMatrixButton(unsigned char* input_data, int row, int col);
 
     void updateButtonStates(unsigned char* input_report);
-
     void resetAllToggleStates();
     
-    // Utility functions
-    //void printToggleStates();
+    // =======================================
+    // Matrix zone toggle functions
+    // =======================================
+    // Zone configuration
+    void setMatrixToggleMode(MatrixToggleZone mode);
+    MatrixToggleZone getMatrixToggleMode() const;
+
+     // Zone utility functions
+    int getButtonZone(int row, int col) const;
+    void untoggleMatrixZone(int zone_id);
+    void untoggleAllMatrixButtons();
+    
 };
 
 #endif // LED_CONTROLLER_TOGGLE_H

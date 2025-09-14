@@ -41,17 +41,22 @@ void ButtonToggleSystem::updateButtonStates(unsigned char* input_report) {
 /*
 * Initializes the button toggle system
 * Resets all toggle states to false (all buttons in original state)
+* Sets default matrix toggle mode to FULL_MATRIX
 * 
 * @return: true if initialization successful
 */
 bool ButtonToggleSystem::initialize() {
     std::cout << "Initializing Button Toggle System..." << std::endl;
-    
+
+    // Set default matrix toggle mode
+    current_matrix_mode = MatrixToggleZone::FULL_MATRIX;
+
     // Reset all led toggle states to false
     resetAllToggleStates();    
 
     // Output initialization status
     std::cout << "  - All toggle states reset to original" << std::endl;
+    std::cout << "  - Matrix toggle mode set to FULL_MATRIX" << std::endl;
     return true;
 }
 
@@ -218,6 +223,7 @@ bool ButtonToggleSystem::toggleStopButton(StopLEDButton button) {
 /*
 * Toggles a matrix button between original brightness and full brightness
 * Preserves the original brightness value using the LED controller's state storage
+* NOTE: This function only handles the actual toggle - zone management is done in shouldToggleMatrixButton()
 *
 * @param row: The row of the matrix button (1-4)
 * @param col: The column of the matrix button (1-4)
@@ -326,6 +332,19 @@ bool ButtonToggleSystem::shouldToggleStopButton(unsigned char* input_data, StopB
     return false;
 }
 
+// =============================================================================
+// ENHANCED MATRIX BUTTON TOGGLE WITH ZONE SYSTEM
+// =============================================================================
+
+/*
+* Enhanced matrix button toggle with automatic zone-based untoggling
+* This is the main function that implements the "untoggle" behavior
+*
+* @param input_data: Current input report
+* @param row: Matrix button row (1-4)  
+* @param col: Matrix button column (1-4)
+* @return: true if toggle action was performed, false otherwise
+*/
 bool ButtonToggleSystem::shouldToggleMatrixButton(unsigned char* input_data, int row, int col) {
     // Step 1: Validate matrix position
     if (row < 1 || row > 4 || col < 1 || col > 4) {
@@ -338,10 +357,130 @@ bool ButtonToggleSystem::shouldToggleMatrixButton(unsigned char* input_data, int
     bool was_pressed = matrix_was_pressed[row][col];
 
     // Step 3: Only trigger on press transition (false -> true)
-    // Call toggle function if pressed and was not pressed
     if (currently_pressed && !was_pressed) {
-        return toggleMatrixButton(row, col);
+
+        // Step 4: Check if this button is already toggled
+        if (matrix_toggled[row][col] == true) {
+            // Button is already toggled - just untoggle it directly
+            return toggleMatrixButton(row, col);
+        } else {
+            // Button is not toggled - untoggle others in zone, then toggle this one
+            
+            // Step 5: Determine which zone this button belongs to
+            int target_zone = getButtonZone(row, col);
+            
+            // Step 6: Auto-untoggle all other buttons in the same zone
+            untoggleMatrixZone(target_zone);
+            
+            // Step 7: Toggle the pressed button
+            return toggleMatrixButton(row, col);
+        }
     }
 
     return false;
+}
+
+// =============================================================================
+// NEW ZONE MANAGEMENT FUNCTIONS
+// =============================================================================
+
+/*
+* Sets the matrix toggle mode (FULL_MATRIX or LEFT_RIGHT_SPLIT)
+* 
+* @param mode: The desired toggle zone mode
+*/
+void ButtonToggleSystem::setMatrixToggleMode(MatrixToggleZone mode) {
+    current_matrix_mode = mode;
+    
+    // Clear all matrix toggles when changing modes to avoid confusion
+    untoggleAllMatrixButtons();
+}
+
+/*
+* Gets the current matrix toggle mode
+* 
+* @return: Current MatrixToggleZone mode
+*/
+MatrixToggleZone ButtonToggleSystem::getMatrixToggleMode() const {
+    return current_matrix_mode;
+}
+
+/*
+* Determines which zone a matrix button belongs to based on current mode
+* 
+* @param row: Matrix button row (1-4)
+* @param col: Matrix button column (1-4)  
+* @return: Zone ID (0 for full matrix, 0/1 for left/right split)
+*/
+int ButtonToggleSystem::getButtonZone(int row, int col) const {
+    // Validate input
+    if (row < 1 || row > 4 || col < 1 || col > 4) {
+        std::cerr << "Error: Invalid matrix position in getButtonZone()" << std::endl;
+        return -1; // Invalid zone
+    }
+    
+    switch (current_matrix_mode) {
+        case MatrixToggleZone::FULL_MATRIX:
+            return 0; // All buttons in same zone
+            
+        case MatrixToggleZone::LEFT_RIGHT_SPLIT:
+            if (col <= 2) {
+                return 0; // Left zone (columns 1-2)
+            } else {
+                return 1; // Right zone (columns 3-4)  
+            }
+            
+        default:
+            std::cerr << "Error: Unknown matrix toggle mode" << std::endl;
+            return -1;
+    }
+}
+
+/*
+* Untoggle all buttons in a specific zone
+* 
+* @param zone_id: Zone to clear (0 for left/full, 1 for right)
+*/
+void ButtonToggleSystem::untoggleMatrixZone(int zone_id) {
+    // Iterate through all matrix buttons
+    for (int row = 1; row <= 4; row++) {
+        for (int col = 1; col <= 4; col++) {
+            
+            // Check if this button belongs to the target zone
+            if (getButtonZone(row, col) == zone_id) {
+                
+                // If button is currently toggled, untoggle it
+                if (matrix_toggled[row][col] == true) {
+                    // Get original state and restore it
+                    LEDStateMatrix original = getMatrixButtonState(row, col);
+                    setMatrixButtonLED(row, col, original.color, original.brightness, false);
+                    
+                    // Update toggle state
+                    matrix_toggled[row][col] = false;
+                }
+            }
+        }
+    }
+}
+
+/*
+* Untoggle all matrix buttons (convenience function)
+* Useful when switching modes or resetting
+*/
+void ButtonToggleSystem::untoggleAllMatrixButtons() {
+    // Iterate through all matrix buttons
+    for (int row = 1; row <= 4; row++) {
+        for (int col = 1; col <= 4; col++) {
+            
+            // If button is currently toggled, untoggle it
+            if (matrix_toggled[row][col] == true) {
+                // Get original state and restore it
+                LEDStateMatrix original = getMatrixButtonState(row, col);
+                setMatrixButtonLED(row, col, original.color, original.brightness, false);
+                
+                // Update toggle state
+                matrix_toggled[row][col] = false;
+            }
+        }
+    }
 }

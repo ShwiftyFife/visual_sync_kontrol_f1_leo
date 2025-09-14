@@ -117,6 +117,8 @@ int main() {
 		// STUFFs HAPPENIN HERE
 		// =============================================================================
 
+		btn_toggle_system.setMatrixToggleMode(MatrixToggleZone::LEFT_RIGHT_SPLIT);
+
 		while (true) {
 
 				// =======================================
@@ -195,6 +197,7 @@ int main() {
 				// =======================================
 				// Check for button toggles
 				// =======================================
+
 				// Special button toggles (only triggers on press, not hold)
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::SHIFT, SpecialLEDButton::SHIFT);
 				btn_toggle_system.shouldToggleSpecialButton(input_report_buffer, SpecialButton::REVERSE, SpecialLEDButton::REVERSE);
