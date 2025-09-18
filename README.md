@@ -246,3 +246,4 @@ int main() {
 ## Next Steps
 
 1. **Scene controller zone integration:** Allow the scene controlelr to also set the matrix toggle mode based on effects page
+2. **Midi integration:** Add MIDI output functionality to send MIDI messages based on button presses and knob/fader movements
